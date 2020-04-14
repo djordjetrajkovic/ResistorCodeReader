@@ -17,10 +17,10 @@ target_sources( classification
 
 target_include_directories( classification PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
-target_link_libraries( classification PUBLIC OCV::highgui)
-target_link_libraries( classification PUBLIC OCV::imgproc)
-target_link_libraries( classification PUBLIC OCV::video)
-target_link_libraries( classification PUBLIC OCV::core)
+target_link_libraries( classification PUBLIC opencv_highgui )
+target_link_libraries( classification PUBLIC opencv_imgproc )
+target_link_libraries( classification PUBLIC opencv_video   )
+target_link_libraries( classification PUBLIC opencv_core    )
 
 # Create ALIAS targets.
 add_library( MyOpenCV::classification ALIAS classification ) 
