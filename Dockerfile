@@ -4,7 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ="Europe/Belgrade"
 RUN apt update; \
     apt -y install sudo; \
-    apt -y install tzdata; \
+    apt install -y cmake; \
+    apt install -y tzdata; \
     apt install -y git; \
     git config --global user.name "djordjetrajkovic"; \
     git config --global user.email "djordje.trajkovic@gmail.com"; \
