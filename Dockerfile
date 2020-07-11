@@ -3,7 +3,7 @@ LABEL maintainer="djordje.trajkovic@gmail.com"
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ="Europe/Belgrade"
 RUN apt update; \
-    apt -y install sudo; \
+    apt install -y sudo; \
     apt install -y cmake; \
     apt install -y tzdata; \
     apt install -y git; \
