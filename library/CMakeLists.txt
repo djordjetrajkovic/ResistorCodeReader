@@ -22,5 +22,22 @@ target_link_libraries( classification PUBLIC opencv_imgproc )
 target_link_libraries( classification PUBLIC opencv_video   )
 target_link_libraries( classification PUBLIC opencv_core    )
 
+
+# An segmentation library
+add_library( segmentation SHARED )
+
+target_sources( segmentation 
+    PRIVATE "src/segmentation.cpp"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/segmentation.h"        
+)
+
+target_include_directories( segmentation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+
+target_link_libraries( segmentation PUBLIC opencv_highgui )
+target_link_libraries( segmentation PUBLIC opencv_imgproc )
+target_link_libraries( segmentation PUBLIC opencv_video   )
+target_link_libraries( segmentation PUBLIC opencv_core    )
+
 # Create ALIAS targets.
 add_library( MyOpenCV::classification ALIAS classification ) 
+add_library( MyOpenCV::segmentation   ALIAS segmentation ) 

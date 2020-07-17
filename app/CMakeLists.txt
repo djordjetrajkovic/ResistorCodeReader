@@ -8,6 +8,5 @@ project( MyOpenCVProject
 
 add_executable( Project )
 target_sources( Project PRIVATE "src/main.cpp" )
-target_link_libraries( Project 
-        PRIVATE MyOpenCV::classification
-)  
+target_link_libraries( Project PRIVATE MyOpenCV::classification )  
+target_link_libraries( Project PRIVATE MyOpenCV::segmentation )
