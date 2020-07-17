@@ -7,6 +7,8 @@ project( OpenCVLibs
         DESCRIPTION "The internal libraries."
     )
 
+# Find Packege
+find_package(OpenCV 4.4)
 # An library
 add_library( classification SHARED )
 
@@ -14,6 +16,7 @@ target_sources( classification
     PRIVATE "src/classification.cpp"
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/classification.h"        
 )
+
 
 target_include_directories( classification PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
@@ -30,7 +33,7 @@ target_sources( segmentation
     PRIVATE "src/segmentation.cpp"
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/segmentation.h"        
 )
-
+message( ${CMAKE_CURRENT_SOURCE_DIR} )
 target_include_directories( segmentation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
 target_link_libraries( segmentation PUBLIC opencv_highgui )
