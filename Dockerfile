@@ -5,6 +5,7 @@ ARG user=djordje
 ARG git_user_name=djordjetrajkovic
 ARG git_email=djordje.trajkovic@gmail.com
 ENV TZ="Europe/Belgrade"
+ENV LD_LIBRARY_PATH="/usr/local/lib"
 RUN echo 'root:root' | chpasswd; \
     useradd -s /bin/bash -d /home/${user} -m -U -G sudo ${user};
 WORKDIR /home
