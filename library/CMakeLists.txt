@@ -7,6 +7,7 @@ project( OpenCVLibs
         DESCRIPTION "The internal libraries."
     )
 
+# Find Packege
 find_package(OpenCV 4.4)
 # An library
 add_library( classification SHARED )
@@ -15,6 +16,7 @@ target_sources( classification
     PRIVATE "src/classification.cpp"
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/classification.h"        
 )
+
 
 target_include_directories( classification PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
