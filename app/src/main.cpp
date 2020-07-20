@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    funkt();
+    segment::funct("test.png", "light.png");
     cout << "OK!!!" << endl;
     return 0;
 }
