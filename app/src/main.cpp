@@ -5,6 +5,7 @@ using namespace std;
 
 int main()
 {
+    funkt();
     cout << "OK!!!" << endl;
     return 0;
 }
