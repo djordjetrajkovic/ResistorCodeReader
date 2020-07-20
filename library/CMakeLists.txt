@@ -33,11 +33,7 @@ target_sources( segmentation
     PRIVATE "src/segmentation.cpp"
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/segmentation.h"        
 )
-<<<<<<< HEAD
 message( ${CMAKE_CURRENT_SOURCE_DIR} )
-=======
-
->>>>>>> dev
 target_include_directories( segmentation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
 target_link_libraries( segmentation PUBLIC opencv_highgui )
