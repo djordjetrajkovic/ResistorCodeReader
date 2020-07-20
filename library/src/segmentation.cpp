@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <math.h>
+#include <ostream>
 using namespace std;
 
 // OpenCV includes
