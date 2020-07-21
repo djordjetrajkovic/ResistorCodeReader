@@ -123,7 +123,12 @@ int segment::funct(string slika, string pozadina)
     namedWindow("Result_Contours");
     imshow("Result_Contours", outputContours);
     
-
+    int key;
+    while (true)
+    {
+        key = cv::waitKey(20);
+		if (key == 27) break;
+	}
     destroyAllWindows();
     return 0;
 
