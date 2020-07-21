@@ -28,6 +28,7 @@ int segment::funct(string slika, string pozadina)
     medianBlur(img, img_median,7);
     namedWindow("Median");
     imshow("Median", img_median);
+    destroyWindow("Median");
 
     //======================================
     // kompenzacija neuniformnog osvetljenja
@@ -122,10 +123,7 @@ int segment::funct(string slika, string pozadina)
     namedWindow("Result_Contours");
     imshow("Result_Contours", outputContours);
     
-    while (true)
-    {
-        waitKey(0);
-    }
+
     destroyAllWindows();
     return 0;
 
