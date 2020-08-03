@@ -2,6 +2,7 @@
 using namespace std;
 
 #include "segmentation.h"
+#include "access.h"
 
 int main()
 {
