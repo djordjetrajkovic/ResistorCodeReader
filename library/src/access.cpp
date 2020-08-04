@@ -69,5 +69,5 @@ void access::locationPtr(string putanja)
     cout << "Vrednosti piksela (0, 0, 0): (" << (int)slika.at<Vec3b>(0,0)[0] << "," << (int)slika.at<Vec3b>(0,0)[1] << "," << (int)slika.at<Vec3b>(0,0)[2] << ")"<< endl;
     
     cout << "Prvi piksel: " << slika.ptr<Vec3b>(0,0)[0] << endl;
-    cout << "Prvi piksel, R: " << (int)slika.ptr<Vec3b>(0,0)[0][2] << endl;
+    cout << "Prvi piksel, R: " << (int)slika.ptr<Vec3b>(0,0)[0][2] << endl; // mora ekspl. konverzija
 }
