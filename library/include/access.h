@@ -1,6 +1,7 @@
 #include "opencv2/core/utility.hpp"
+#include <string>
 namespace access
 {
-    cv::Mat test(string, string);
-    void locationAt(Mat);
+    void locationAt(std::string);
+    void locationPtr(std::string);
 }
