@@ -4,4 +4,5 @@ namespace access
 {
     void locationAt(std::string);
     void locationPtr(std::string);
+    void iterator(std::string);
 }

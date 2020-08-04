@@ -72,3 +72,10 @@ void access::locationPtr(string putanja)
     cout << "Prvi piksel: " << *slika.ptr<Vec3b>(0,0) << endl;
     cout << "Prvi piksel, R: " << (int)slika.ptr<Vec3b>(0,0)[0][2] << endl; // mora ekspl. konverzija
 }
+
+void access::iterator(string putanja)
+{
+    Mat slika = test(putanja);
+    
+       
+}
