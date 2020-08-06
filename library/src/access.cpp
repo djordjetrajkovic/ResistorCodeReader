@@ -76,6 +76,94 @@ void access::locationPtr(string putanja)
 void access::iterator(string putanja)
 {
     Mat slika = test(putanja);
+    Mat grayLena, grayLena2;
+    cvtColor(slika, grayLena, COLOR_BGR2GRAY);
+    cvtColor(slika, grayLena2, COLOR_BGR2GRAY);
+    imshow("Gray", grayLena);
+
+    // Iterator
+    MatIterator_<uchar> it, end;
+    for (it = grayLena.begin<uchar>(), end=grayLena.end<uchar>(); it != end; ++it)
+    {
+        *it = 212;
+    }
+    imshow("212", grayLena);
     
-       
+    // Const Iterator
+    MatConstIterator_<Vec3b> itt = slika.begin<Vec3b>(), endd = slika.end<Vec3b>();
+    int sum = 0;
+    while ( itt != endd)
+    {
+        // cout << *itt << endl;
+        sum += (int)(*itt)[0] + (int)(*itt)[1] + (int)(*itt)[2];
+        itt++;
+    }
+    cout << "Suma: " << sum << endl;
+
+    waitKey(0);
+}
+
+void access::naryiterator(string putanja)
+{
+    // const int n_mat_size = 3;
+    // const int n_mat_sz[] = { n_mat_size, n_mat_size, n_mat_size };
+    // Mat n_mat( 3, n_mat_sz, CV_32FC1 );
+
+    // RNG rng;
+    // rng.fill( n_mat, RNG::UNIFORM, 0.f, 1.f );
+
+    // First, we need a C-style array containing pointers to all of the cv::Mats 
+    // we wish to iterate over (in this example, there is just one). This array 
+    // must always be terminated with a 0 or NULL
+    
+    Mat n_mat = test(putanja);
+    const Mat* arrays[] = { &n_mat, 0 };
+    // Next, we need another C-style array of cv::Mats that can be used to refer
+    // to the individual planes as we iterate over them (in this case, there is also just one)
+    Mat my_planes[1];
+    NAryMatIterator it( arrays, my_planes );
+
+    // On each iteration, it.planes[i] will be the current plane of the
+    // i-th array from 'arrays'.
+    
+    int s = 0, ss = 0, sss = 0;          // Total sum over all planes
+    int   n = 0;                                 // Total number of planes
+    for (int p = 0; p < it.nplanes; p++, ++it) 
+    {
+        s   += sum(it.planes[0])[0];
+        ss  += sum(it.planes[0])[1];
+        sss += sum(it.planes[0])[2];
+        n++;
+    }
+    cout << "Suma 1: "       << s   << endl;
+    cout << "Suma 2: "       << ss  << endl;
+    cout << "Suma 3: "       << sss << endl;
+    cout << "Broj ravni: "   << n   << endl;
+}
+
+void access::naryiterator()
+{
+    const int n_mat_size = 5;
+    const int n_mat_sz[] = { n_mat_size, n_mat_size, n_mat_size };
+    cv::Mat n_mat0( 3, n_mat_sz, CV_32FC1 );
+    cv::Mat n_mat1( 3, n_mat_sz, CV_32FC1 );
+
+    cv::RNG rng;
+    rng.fill( n_mat0, cv::RNG::UNIFORM, 0.f, 1.f );
+    rng.fill( n_mat1, cv::RNG::UNIFORM, 0.f, 1.f );
+
+    const cv::Mat* arrays[] = { &n_mat0, &n_mat1, 0 };
+    cv::Mat my_planes[2];
+    cv::NAryMatIterator it( arrays, my_planes );
+
+    float s = 0.f;                    // Total sum over all planes in both arrays
+    int   n = 0;                      // Total number of planes
+    for(int p = 0; p < it.nplanes; p++, ++it) 
+    {
+        s += cv::sum(it.planes[0])[0];
+        s += cv::sum(it.planes[1])[0];
+        n++;
+    }
+    
+    cout << "Suma: " << s << endl;
 }
