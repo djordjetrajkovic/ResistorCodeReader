@@ -103,6 +103,38 @@ void access::iterator(string putanja)
     waitKey(0);
 }
 
+void access::iterator2()
+{
+    const int n_mat_size = 3;
+    const int n_mat_sz[] = { n_mat_size , n_mat_size, n_mat_size };
+    cv::Mat m1(3, n_mat_sz, CV_8UC3);
+
+    cv::MatIterator_<Vec3b> it = m1.begin<Vec3b>();
+    cv::MatIterator_<Vec3b> end = m1.end<Vec3b>();
+    for (uchar i = 0; it != end; ++it, ++i)
+    {
+        (*it)[0] = i;
+        (*it)[1] = i * 10;
+        (*it)[2] = i * 100;
+    }
+
+    cv::InputArray arr(m1);
+    std::vector<cv::Mat> planes;
+    arr.getMatVector(planes);
+    for (size_t i = 0; i < planes.size(); ++i)
+    {
+        std::cout << "-------" << std::endl << planes[i] << std::endl << "******" << std::endl;
+        vector<Mat> bgr;
+        split(planes[i], bgr);
+        for (size_t j=0; j<bgr.size(); ++j)
+        {
+            std::cout << "++++++++" << endl << bgr.at(j) << endl << "^^^^^^^^" << endl;
+        }
+    }
+
+    cout << "planes.size: " << planes.size() << endl;
+}
+
 void access::naryiterator(string putanja)
 {
     // const int n_mat_size = 3;
@@ -144,9 +176,9 @@ void access::naryiterator(string putanja)
 void access::naryiterator()
 {
     const int n_mat_size = 5;
-    const int n_mat_sz[] = { n_mat_size, n_mat_size, n_mat_size };
-    cv::Mat n_mat0( 3, n_mat_sz, CV_32FC1 );
-    cv::Mat n_mat1( 3, n_mat_sz, CV_32FC1 );
+    const int n_mat_sz[] = { n_mat_size, n_mat_size };
+    cv::Mat n_mat0( 2, n_mat_sz, CV_32FC3 );
+    cv::Mat n_mat1( 2, n_mat_sz, CV_32FC3 );
 
     cv::RNG rng;
     rng.fill( n_mat0, cv::RNG::UNIFORM, 0.f, 1.f );
@@ -155,15 +187,20 @@ void access::naryiterator()
     const cv::Mat* arrays[] = { &n_mat0, &n_mat1, 0 };
     cv::Mat my_planes[2];
     cv::NAryMatIterator it( arrays, my_planes );
+    cout << "it size: "    << it.size    << endl;
+    cout << "it.nplanes: " << it.nplanes << endl;
 
     float s = 0.f;                    // Total sum over all planes in both arrays
     int   n = 0;                      // Total number of planes
     for(int p = 0; p < it.nplanes; p++, ++it) 
     {
+        //cout << "Plane: " << it.planes[0] << endl;
+        cout << sum(it.planes[0]) << endl;
+        cout << sum(it.planes[1]) << endl;
         s += cv::sum(it.planes[0])[0];
         s += cv::sum(it.planes[1])[0];
         n++;
     }
-    
-    cout << "Suma: " << s << endl;
+    cout << "Number of iterations: " << n << endl;
+    cout << "Sum: " << s << endl;
 }
