@@ -41,6 +41,7 @@ target_link_libraries( segmentation PUBLIC opencv_highgui )
 target_link_libraries( segmentation PUBLIC opencv_imgproc )
 target_link_libraries( segmentation PUBLIC opencv_video   )
 target_link_libraries( segmentation PUBLIC opencv_core    )
+target_link_libraries( segmentation PUBLIC ${OpenCV_LIBS} )
 
 # An test library
 add_library( test SHARED )

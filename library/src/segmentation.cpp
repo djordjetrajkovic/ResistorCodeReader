@@ -10,6 +10,7 @@ using namespace std;
 #include "opencv2/core/utility.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
+#include <opencv2/shape/shape_distance.hpp>
 using namespace cv;
 
 #include "segmentation.h" 
@@ -21,8 +22,8 @@ int segment::funct(string slika, string pozadina)
     Mat img(imread(slika, IMREAD_GRAYSCALE), r);
     // Pozadina 
     Mat light(imread(pozadina, IMREAD_GRAYSCALE), r);
-    namedWindow("Image");
-    imshow("Image", img);
+    // namedWindow("Image");
+    // imshow("Image", img);
     //======================================
     // uklanjanje suma median filterom zbog tipa suma
     Mat img_median;
@@ -32,7 +33,7 @@ int segment::funct(string slika, string pozadina)
 
     vector<vector<Point>> konture;
     vector<Rect> rectangles;
-    contourSearch(img_median, konture, rectangles, true);
+    //contourSearch(img_median, konture, rectangles, true);
     
     //======================================
     // kompenzacija neuniformnog osvetljenja
@@ -72,7 +73,23 @@ int segment::funct(string slika, string pozadina)
     }
     namedWindow("Remove Small Objects");
     imshow("Remove Small Objects", rem_small_img);
-
+    contourSearch(rem_small_img, konture, rectangles, true); // !!!!!!!!!
+    Mat uzorak = imread("template.jpg", IMREAD_GRAYSCALE);
+    for (auto rect: rectangles)
+    {
+        Mat slika = rem_small_img(rect);
+        Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
+        vector<Point> c1 = sampleContour(slika);
+        vector<Point> c2 = sampleContour(uzorak);
+        float dis;
+        if (!c1.empty() && !c2.empty()) dis = mysc ->computeDistance(c1, c2);
+        cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
+    }
+    
+    
+    
+    
+    
     //======================================
     // Odredjivanje svih piksela koji pripadaju istom objektu
     Mat labels, stats, centroids;
@@ -146,13 +163,17 @@ int segment::funct(string slika, string pozadina)
         
     for(auto rect: rectangles)
     {
-        cout << "Radi li?" << rect.area() << endl;
         Scalar color = Scalar(rand() % 255,rand() % 255,rand() % 255);
         rectangle(outputContours, rect, color, 1);
+        rectangle(img, rect, color, 1);
+        stringstream ss;
+        ss << "Povrsina :" << rect.area();
+        putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 ,Scalar(255, 255, 255));
     }
     namedWindow("Result_Contours");
     imshow("Result_Contours", outputContours);
-    
+    namedWindow("Image");
+    imshow("Image", img);
     char key;
     while (true)
     {
@@ -167,20 +188,20 @@ int segment::funct(string slika, string pozadina)
 void segment::contourSearch(Mat inputimage, vector<vector<Point>> contours, vector<Rect>& rectangles, bool show)
 {
     if (show) imshow("Input image", inputimage);
-    Mat temple = imread("template.jpg");
-    if (temple.data) temple = inputimage(Rect(705,513,90,70));
-    imwrite("template.jpg", temple);
+    Mat temple = imread("template.jpg", IMREAD_GRAYSCALE);
+    //if (temple.data) temple = inputimage(Rect(705,513,90,70));
+    //imwrite("template.jpg", temple);
     Mat ftmp[6];
     for (int i=0; i<6; ++i)
     {
         matchTemplate(inputimage,temple,ftmp[i],i);
         normalize(ftmp[i],ftmp[i],1,0,NORM_MINMAX);
     }
-    //cv::imshow( "SQDIFF", ftmp[0] );
-    //cv::imshow( "SQDIFF_NORMED", ftmp[1] );
-    //cv::imshow( "CCORR", ftmp[2] );
-    //cv::imshow( "CCORR_NORMED", ftmp[3] );
-    //cv::imshow( "CCOEFF_NORMED", ftmp[5] );
+    //imshow( "SQDIFF", ftmp[0] );
+    //imshow( "SQDIFF_NORMED", ftmp[1] );
+    //imshow( "CCORR", ftmp[2] );
+    //imshow( "CCORR_NORMED", ftmp[3] );
+    //imshow( "CCOEFF_NORMED", ftmp[5] );
     if (show) imshow( "CCOEFF", ftmp[4] );
     
     Mat img_thrld;
@@ -210,4 +231,31 @@ void segment::contourSearch(Mat inputimage, vector<vector<Point>> contours, vect
         rectangle(outputContours, rect, color, 1);
     }
     if (show) imshow("KONTURE", outputContours);
+}
+
+vector<Point> segment::sampleContour(const Mat& image, int n)
+{
+    vector<vector<Point>> _contours;
+    vector<Point>all_points;
+    findContours(image, _contours, RETR_LIST, CHAIN_APPROX_NONE);
+    if (_contours.empty()) return all_points;
+    for (int i=0; i<_contours.size();i++)
+    {
+        for (int j=0;j<_contours[i].size();j++)
+        {
+            all_points.push_back(_contours[i][j]);
+        }
+    }
+
+    int dummy = 0;
+    for (int add=(int)all_points.size();add<n;add++)
+    {
+        all_points.push_back(all_points[dummy++]);
+    }
+
+    random_shuffle(all_points.begin(),all_points.end());
+    vector<Point> sampled;
+    for (int i=0;i<n;i++) sampled.push_back(all_points[i]);
+
+    return sampled;
 }

@@ -15,4 +15,5 @@ namespace segment
 {
     int funct(string, string);
     void contourSearch(Mat, vector<vector<Point>>, vector<Rect>&, bool);
+    vector<Point> sampleContour(const Mat&, int n = 300);
 }
