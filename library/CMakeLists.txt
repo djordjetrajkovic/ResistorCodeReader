@@ -41,7 +41,7 @@ target_link_libraries( segmentation PUBLIC opencv_highgui )
 target_link_libraries( segmentation PUBLIC opencv_imgproc )
 target_link_libraries( segmentation PUBLIC opencv_video   )
 target_link_libraries( segmentation PUBLIC opencv_core    )
-target_link_libraries( segmentation PUBLIC ${OpenCV_LIBS} )
+target_link_libraries( segmentation PUBLIC opencv_shape  )
 
 # An test library
 add_library( test SHARED )
@@ -51,6 +51,7 @@ target_sources( test
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/access.h"        
 )
 message( ${CMAKE_CURRENT_SOURCE_DIR} )
+message( ${OpenCV_LIBS} )
 target_include_directories( test PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
 target_link_libraries( test PUBLIC opencv_highgui )

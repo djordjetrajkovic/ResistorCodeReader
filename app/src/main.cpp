@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    segment::funct("image4.jpg", "background4.jpg");
+    segment::funct("image5.jpg", "background5.jpg", false);
     cout << "OK!!!" << endl;
     //access::locationAt("lena.jpg");
     //access::locationPtr("lena.jpg");
