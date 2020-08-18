@@ -14,18 +14,10 @@ using namespace std;
 using namespace cv;
 
 #include "segmentation.h" 
+#include "classification.h"
 
-int segment::funct(string slika, string pozadina, bool show)
+int segment::funct(Mat img, Mat light, Mat templ, bool show)
 {
-    // Load images
-    Rect r(300,300, 900, 1200);
-    // Main image 
-    Mat img(imread(slika, IMREAD_GRAYSCALE), r);
-    // Background 
-    Mat light(imread(pozadina, IMREAD_GRAYSCALE), r);
-    //namedWindow("Image");
-    if (show) imshow("Image", img);
-
     // Median filter applying
     Mat img_median;
     medianBlur(img, img_median,7);
@@ -97,73 +89,55 @@ int segment::funct(string slika, string pozadina, bool show)
     // contour search algorithm
     vector<vector<Point>> konture;
     vector<Rect> rectangles;
-    contourSearch(isolated_img, konture, rectangles, false);
+    classificationnmsp::contourSearch(isolated_img, konture, rectangles, false);
+    for (auto kontura: konture) cout << "Kontura: "     << kontura.size() << endl;
+    for (auto rect: rectangles) cout << "Pravougaonik: "<< rect.size() << endl;
 
-    // Drawing
-    for(auto rect: rectangles)
+    // Shape Context Distance Extractor
+    for (auto rect: rectangles)
     {
-        Scalar color = Scalar(0);
-        rectangle(img, rect, color, 1);
+        Mat picture = img(rect);
+        Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
+        vector<Point> c1 = sampleContour(picture);
+        vector<Point> c2 = sampleContour(templ);
+        float dis;
+        if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
+        cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
+    
+        if (dis < 1) rectangle(img, rect, Scalar(0), 1); else rectangle(img, rect, Scalar(255), 1);
         stringstream ss;
         ss << "Povrsina :" << rect.area();
         putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(255));
     }
-    //namedWindow("Image");
+
     imshow("Image", img);
     
-    // End of execution
-    char key;
-    while (true)
-    {
-        key = cv::waitKey('q');
-		if (key == 'q') break;
-	}
-    destroyAllWindows();
     return 0;
 }
 
-void segment::contourSearch(Mat inputimage, vector<vector<Point>> contours, vector<Rect>& rectangles, bool show)
+vector<Point> segment::sampleContour(const Mat& image, int n)
 {
-    if (show) imshow("Input image", inputimage);
-    Mat temple = imread("template.jpg", IMREAD_GRAYSCALE);
-    Mat ftmp[6];
-    for (int i=0; i<6; ++i)
+    vector<vector<Point>> _contours;
+    vector<Point>all_points;
+    findContours(image, _contours, RETR_LIST, CHAIN_APPROX_NONE);
+    if (_contours.empty()) return all_points;
+    for (int i=0; i<_contours.size();i++)
     {
-        matchTemplate(inputimage,temple,ftmp[i],i);
-        normalize(ftmp[i],ftmp[i],1,0,NORM_MINMAX);
+        for (int j=0;j<_contours[i].size();j++)
+        {
+            all_points.push_back(_contours[i][j]);
+        }
     }
-    //imshow( "SQDIFF", ftmp[0] );
-    //imshow( "SQDIFF_NORMED", ftmp[1] );
-    //imshow( "CCORR", ftmp[2] );
-    //imshow( "CCORR_NORMED", ftmp[3] );
-    //imshow( "CCOEFF_NORMED", ftmp[5] );
-    if (show) imshow( "CCOEFF", ftmp[4] );
-    
-    Mat img_thrld;
-    threshold(ftmp[4], img_thrld, 0.5, 1, THRESH_BINARY);
-    if (show) imshow("Thresh image", img_thrld);
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-    Mat rem_small_img;
-    dilate(img_thrld, rem_small_img, kernel, Point(-1,-1), 1);
-    //morphologyEx(img_thrld, rem_small_img, MORPH_CLOSE,kernel);
-    if (show) imshow("DILATE", rem_small_img);
-    rem_small_img.convertTo(rem_small_img, CV_8UC1, 255.0); 
-    findContours(rem_small_img, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-    Mat outputContours(rem_small_img.rows, rem_small_img.cols, rem_small_img.type());
-    for (auto i = 0; i < contours.size(); i++) 
+
+    int dummy = 0;
+    for (int add=(int)all_points.size();add<n;add++)
     {
-        Scalar color = Scalar(rand() % 255, rand() % 255, rand() % 255);
-        drawContours(outputContours, contours, i, color);
+        all_points.push_back(all_points[dummy++]);
     }
-    
-    for(auto contour: contours)
-    {
-        auto rect = boundingRect(contour);
-        rect.x += (int)temple.cols/2 - 1;
-        rect.y += (int)temple.rows/2 - 1;
-        rectangles.push_back(rect);
-        Scalar color = Scalar(rand() % 255);
-        rectangle(outputContours, rect, color, 1);
-    }
-    if (show) imshow("KONTURE", outputContours);
+
+    random_shuffle(all_points.begin(),all_points.end());
+    vector<Point> sampled;
+    for (int i=0;i<n;i++) sampled.push_back(all_points[i]);
+
+    return sampled;
 }

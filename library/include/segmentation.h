@@ -13,7 +13,6 @@ using namespace cv;
 
 namespace segment
 {
-    int funct(string, string, bool);
-    void contourSearch(Mat, vector<vector<Point>>, vector<Rect>&, bool);
+    int funct(Mat, Mat, Mat, bool);
     vector<Point> sampleContour(const Mat&, int n = 300);
 }
