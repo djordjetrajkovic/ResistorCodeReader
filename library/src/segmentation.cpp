@@ -89,7 +89,7 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
     // contour search algorithm
     vector<vector<Point>> konture;
     vector<Rect> rectangles;
-    classificationnmsp::contourSearch(isolated_img, konture, rectangles, false);
+    classificationnmsp::contourSearch(isolated_img, konture, rectangles, show);
     for (auto kontura: konture) cout << "Kontura: "     << kontura.size() << endl;
     for (auto rect: rectangles) cout << "Pravougaonik: "<< rect.size() << endl;
 
@@ -103,13 +103,13 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
         float dis;
         if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
         cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
-    
+        
         if (dis < 1) rectangle(img, rect, Scalar(0), 1); else rectangle(img, rect, Scalar(255), 1);
         stringstream ss;
         ss << "Povrsina :" << rect.area();
         putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(255));
     }
-
+    drawContours(img, konture, -1, Scalar(125));
     imshow("Image", img);
     
     return 0;
