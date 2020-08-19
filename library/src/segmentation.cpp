@@ -109,7 +109,7 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
         {
             rectangle(img, rect, Scalar(0), 1);
             objectsnmsp::Resistor *res = new objectsnmsp::Resistor();
-            res->setRect(rect);
+            res -> setRect(rect);
             delete res;
         }
         else rectangle(img, rect, Scalar(255), 1);

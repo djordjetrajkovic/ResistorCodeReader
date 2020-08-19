@@ -18,7 +18,7 @@ using namespace cv;
 void classificationnmsp::contourSearch(Mat inputimage, vector<vector<Point>>& contours, vector<Rect>& rectangles, bool show)
 {
     if (show) imshow("Input image", inputimage);
-    Mat temple = imread("template.jpg", IMREAD_GRAYSCALE);
+    Mat temple = imread("samples/templates/binary/template.jpg", IMREAD_GRAYSCALE);
     Mat ftmp[6];
     for (int i=0; i<6; ++i)
     {
