@@ -46,4 +46,7 @@ vector<Mat> inputnmsp::loadtemplategrayscale(string path, bool show)
 vector<Mat> inputnmsp::loadtemplatebinary(string path, bool show)
 {
     Mat temple = imread("template.jpg", IMREAD_GRAYSCALE);
+    vector<Mat> templates;
+    templates.push_back(temple);
+    return templates;
 }

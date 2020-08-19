@@ -10,7 +10,7 @@ int main()
     vector<Mat> images = inputnmsp::loadimages("image5.jpg", false);
     Mat backgroung = inputnmsp::loadbackground("background5.jpg", false);
     vector<Mat> templ = inputnmsp::loadtemplategrayscale("template_grayscale.jpg", false);
-    for (auto img: images) segment::funct(img, backgroung, templ.at(0), true);
+    for (auto img: images) segment::funct(img, backgroung, templ.at(0), false);
     
     cout << "OK!!!" << endl;
     //access::locationAt("lena.jpg");

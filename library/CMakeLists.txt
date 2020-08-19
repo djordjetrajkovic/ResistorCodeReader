@@ -26,6 +26,22 @@ target_link_libraries( classification PUBLIC opencv_imgproc )
 target_link_libraries( classification PUBLIC opencv_video   )
 target_link_libraries( classification PUBLIC opencv_core    )
 
+# An objects library
+add_library( objects SHARED )
+
+target_sources( objects 
+    PRIVATE "src/objects.cpp"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/object.h"        
+)
+
+
+target_include_directories( objects PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+
+target_link_libraries( objects PUBLIC opencv_highgui )
+target_link_libraries( objects PUBLIC opencv_imgproc )
+target_link_libraries( objects PUBLIC opencv_video   )
+target_link_libraries( objects PUBLIC opencv_core    )
+
 # An segmentation library
 add_library( segmentation SHARED )
 
@@ -42,6 +58,7 @@ target_link_libraries( segmentation PUBLIC opencv_video   )
 target_link_libraries( segmentation PUBLIC opencv_core    )
 target_link_libraries( segmentation PUBLIC opencv_shape   )
 target_link_libraries( segmentation PUBLIC classification )
+target_link_libraries( segmentation PUBLIC objects        )
 
 # An test library
 add_library( test SHARED )
@@ -71,8 +88,11 @@ target_link_libraries( input PUBLIC opencv_imgproc )
 target_link_libraries( input PUBLIC opencv_video   )
 target_link_libraries( input PUBLIC opencv_core    )
 
+
+
 # Create ALIAS targets.
 add_library( MyOpenCV::classification ALIAS classification ) 
 add_library( MyOpenCV::segmentation   ALIAS segmentation )
 add_library( MyOpenCV::test   ALIAS test )
 add_library( MyOpenCV::input   ALIAS input )
+add_library( MyOpenCV::objects ALIAS objects)

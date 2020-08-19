@@ -15,6 +15,7 @@ using namespace cv;
 
 #include "segmentation.h" 
 #include "classification.h"
+#include "object.h"
 
 int segment::funct(Mat img, Mat light, Mat templ, bool show)
 {
@@ -104,10 +105,19 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
         if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
         cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
         
-        if (dis < 1) rectangle(img, rect, Scalar(0), 1); else rectangle(img, rect, Scalar(255), 1);
+        if (dis < 1) 
+        {
+            rectangle(img, rect, Scalar(0), 1);
+            objectsnmsp::Resistor *res = new objectsnmsp::Resistor();
+            res->setRect(rect);
+            delete res;
+        }
+        else rectangle(img, rect, Scalar(255), 1);
+
         stringstream ss;
         ss << "Povrsina :" << rect.area();
         putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(255));
+        
     }
     drawContours(img, konture, -1, Scalar(125));
     imshow("Image", img);
