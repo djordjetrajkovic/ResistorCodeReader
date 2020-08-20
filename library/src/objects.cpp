@@ -7,7 +7,9 @@ using namespace std;
 #include "opencv2/highgui.hpp"
 using namespace cv;
 
-namespace classificationnmsp
+#include "object.h"
+
+string objectsnmsp::Resistor::getDescription()
 {
-    void contourSearch(Mat, vector<vector<Point>>&, vector<Rect>&, bool);
+    return "resistor value by colors";
 }
