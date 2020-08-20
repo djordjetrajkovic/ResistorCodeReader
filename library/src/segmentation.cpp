@@ -23,8 +23,9 @@ int segment::funct(Mat img, Mat light, Mat templ, Mat templbin, bool show)
     // Median filter applying
     Mat img_median;
     medianBlur(img, img_median,7);
-    //namednamedWindow("Median");
-    if (show) imshow("Median", img_median);
+    namedWindow("Median");
+    imshow("Median", img_median);
+    
 
     // Background substruction
     Mat img_comp;
