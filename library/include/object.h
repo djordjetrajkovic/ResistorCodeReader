@@ -48,8 +48,8 @@ namespace objectsnmsp
         }
 
         // virtual methods
-        virtual string getCategory() = 0;
-        virtual string getType() = 0;
+        virtual const string getCategory() const = 0;
+        virtual const string getType() const = 0;
         virtual string getDescription() = 0;
 
     };
@@ -57,8 +57,8 @@ namespace objectsnmsp
     class Unknown: public Object 
     {
         public:
-        string getCategory() override { return "Unknown"; }
-        string getType() override { return "Unknown"; }
+        const string getCategory() const override { return "Unknown"; }
+        const string getType() const override { return "Unknown"; }
         string getDescription() override { return "Unknown"; }
     };
 
@@ -66,8 +66,8 @@ namespace objectsnmsp
     {
         public:
         Electronics(){}
-        string getCategory() override { return "Electronics"; }
-        virtual string getType() = 0;
+        const string getCategory() const override { return "Electronics"; }
+        virtual const string getType() const = 0;
         virtual string getDescription() = 0;        
     };
 
@@ -82,7 +82,7 @@ namespace objectsnmsp
         Scalar ringfive;
         public:
         Resistor(){}
-        string getType() override { return "Resistor"; }
+        const string getType() const override { return "Resistor"; }
         string getDescription() override;
     };
 }
