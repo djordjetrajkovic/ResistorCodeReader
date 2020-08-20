@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ostream>
 #include <algorithm>
+#include <random>
 using namespace std;
 
 // OpenCV includes
@@ -17,7 +18,7 @@ using namespace cv;
 #include "classification.h"
 #include "object.h"
 
-int segment::funct(Mat img, Mat light, Mat templ, bool show)
+int segment::funct(Mat img, Mat light, Mat templ, Mat templbin, bool show)
 {
     // Median filter applying
     Mat img_median;
@@ -91,29 +92,27 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
     vector<vector<Point>> konture;
     vector<Rect> rectangles;
     classificationnmsp::contourSearch(isolated_img, konture, rectangles, show);
-    for (auto kontura: konture) cout << "Kontura: "     << kontura.size() << endl;
-    for (auto rect: rectangles) cout << "Pravougaonik: "<< rect.size() << endl;
 
     // Shape Context Distance Extractor
+    vector<Point> c2 = sampleContour(templ, RETR_LIST);
+    float dis = 0;
+    vector<vector<Point>> templateBinaryContours;
+    findContours(templbin, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE); // kontura binarne slike
     for (auto rect: rectangles)
     {
         Mat picture = img(rect);
         Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
-        vector<Point> c1 = sampleContour(picture);
-        vector<Point> c2 = sampleContour(templ);
-        float dis;
+        vector<Point> c1 = sampleContour(picture, RETR_LIST);
         if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
         cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
-        
-        if (dis < 1) 
+        if (dis < 1)
         {
             rectangle(img, rect, Scalar(0), 1);
-            objectsnmsp::Resistor *res = new objectsnmsp::Resistor();
-            res -> setRect(rect);
-            delete res;
+            RotatedRect rr  = findRotRect(isolated_img(rect));
+            
         }
         else rectangle(img, rect, Scalar(255), 1);
-
+        
         stringstream ss;
         ss << "Povrsina :" << rect.area();
         putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(255));
@@ -125,11 +124,35 @@ int segment::funct(Mat img, Mat light, Mat templ, bool show)
     return 0;
 }
 
-vector<Point> segment::sampleContour(const Mat& image, int n)
+RotatedRect segment::findRotRect(Mat sample)
+{
+    vector<vector<Point>> contours;
+    findContours(sample, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+    RotatedRect r;
+    for(int i = 0; i < contours.size(); ++i)
+    {
+        Mat obrazac(sample.rows, sample.cols, sample.depth(),Scalar(255));
+        drawContours(obrazac, contours, i, Scalar(125));
+        stringstream ime; ime << "sample " << rand(); 
+        r = fitEllipse(contours[i]);
+
+        Point2f vertices[4];
+        r.points(vertices);
+        for (int i = 0; i < 4; i++) line(obrazac, vertices[i], vertices[(i+1)%4], Scalar(0), 1);
+        Rect brect = r.boundingRect();
+        rectangle(obrazac, brect, Scalar(180), 1);
+
+        namedWindow(ime.str(),WINDOW_NORMAL);
+        imshow(ime.str(), obrazac);
+    }
+    return r;
+}
+
+vector<Point> segment::sampleContour(const Mat& image, int method, int n)
 {
     vector<vector<Point>> _contours;
     vector<Point>all_points;
-    findContours(image, _contours, RETR_LIST, CHAIN_APPROX_NONE);
+    findContours(image, _contours, method, CHAIN_APPROX_NONE);
     if (_contours.empty()) return all_points;
     for (int i=0; i<_contours.size();i++)
     {

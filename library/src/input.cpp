@@ -36,7 +36,7 @@ Mat inputnmsp::loadbackground(string path, bool show)
 // Template grayscale
 vector<Mat> inputnmsp::loadtemplategrayscale(string path, bool show)
 {
-    Mat temple = imread("template_grayscale.jpg", IMREAD_GRAYSCALE);
+    Mat temple = imread(path, IMREAD_GRAYSCALE);
     vector<Mat> templates;
     templates.push_back(temple);
     return templates;
@@ -45,7 +45,9 @@ vector<Mat> inputnmsp::loadtemplategrayscale(string path, bool show)
 // Template binary
 vector<Mat> inputnmsp::loadtemplatebinary(string path, bool show)
 {
-    Mat temple = imread("template.jpg", IMREAD_GRAYSCALE);
+    Mat temple = imread(path, IMREAD_GRAYSCALE);
+    threshold(temple, temple, 120, 255, cv::THRESH_BINARY);
+    if (show) { namedWindow("Binary", WINDOW_NORMAL); imshow("Binary", temple); }
     vector<Mat> templates;
     templates.push_back(temple);
     return templates;
