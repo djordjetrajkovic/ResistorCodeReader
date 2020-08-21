@@ -9,5 +9,9 @@ using namespace cv;
 
 namespace classificationnmsp
 {
-    void contourSearch(Mat, vector<vector<Point>>&, vector<Rect>&, bool);
+    vector<objectsnmsp::Object*> findObjects(Mat, vector<Mat> , bool);
+    vector<objectsnmsp::Object*> searchbyTemplate(Mat, Mat, bool);
+    void searchbyContour(vector<objectsnmsp::Object*>, Mat, vector<Mat>, vector<Mat>);
+    RotatedRect findRotRect(Mat);
+    vector<Point> sampleContour(const Mat&, int, int);
 }
