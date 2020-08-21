@@ -25,6 +25,8 @@ target_link_libraries( classification PUBLIC opencv_highgui )
 target_link_libraries( classification PUBLIC opencv_imgproc )
 target_link_libraries( classification PUBLIC opencv_video   )
 target_link_libraries( classification PUBLIC opencv_core    )
+target_link_libraries( classification PUBLIC opencv_shape   )
+target_link_libraries( classification PUBLIC objects        )
 
 # An objects library
 add_library( objects SHARED )

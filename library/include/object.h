@@ -12,6 +12,8 @@ namespace objectsnmsp
 {
     class Object {
     protected:
+        Mat* image;
+        Rect roi;
         vector<Point> contour;
         RotatedRect rotrectangle;
         Rect rectangle;
@@ -19,7 +21,26 @@ namespace objectsnmsp
         string category;
         string type;
     public:
-        Object(){}
+        Object() {}
+
+        void setImage(Mat* img)
+        {
+            image = img;
+        }
+        Mat* getImage()
+        {
+            return image;
+        }
+
+        void setRoi(Rect roi)
+        {
+            this->roi = roi;
+        }
+        Rect getRoi()
+        {
+            return roi;
+        }
+
         vector<Point> getConture() 
         {
             return contour;

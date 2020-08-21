@@ -13,7 +13,5 @@ using namespace cv;
 
 namespace segment
 {
-    int funct(Mat, Mat, Mat, Mat, bool);
-    vector<Point> sampleContour(const Mat&, int, int n = 300);
-    RotatedRect findRotRect(Mat);
+    int funct(Mat img, Mat light, bool show);
 }
