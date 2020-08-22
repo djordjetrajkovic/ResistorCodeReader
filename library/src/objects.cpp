@@ -23,6 +23,7 @@ void objectsnmsp::Object::copy(const Object& obj)
     name = obj.name;
     category = obj.category;
     type = obj.type;
+    
 }
 
 void objectsnmsp::Object::mov(Object& obj)
