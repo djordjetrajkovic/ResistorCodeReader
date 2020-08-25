@@ -10,28 +10,6 @@ using namespace cv;
 
 #include "input.h"
 
-vector<Mat> inputnmsp::loadimages(string slika, bool show)
-{
-    vector<Mat> inputimages;
-    // Load images
-    Rect r(300,300, 900, 1200);
-    // Main image 
-    Mat img(imread(slika, IMREAD_GRAYSCALE), r);
-    inputimages.push_back(img);
-    
-    //namedWindow("Image");
-    if (show) imshow("Image", img);
-    
-    return inputimages;
-}
-
-// Background
-Mat inputnmsp::loadbackground(string path, bool show)
-{
-    Rect r(300,300, 900, 1200);
-    Mat light(imread(path, IMREAD_GRAYSCALE), r);
-    return light;
-}
 
 // Template grayscale
 vector<Mat> inputnmsp::loadtemplategrayscale(string path, bool show)
@@ -51,4 +29,15 @@ vector<Mat> inputnmsp::loadtemplatebinary(string path, bool show)
     vector<Mat> templates;
     templates.push_back(temple);
     return templates;
+}
+
+void panmsp::File::openImageFile()
+{
+    Mat img(imread(imagepath), roi);
+    operation->setImage(img);
+}
+
+void panmsp::File::openBckgFile()
+{
+    Mat light(imread(backgroundgpath), roi);
 }

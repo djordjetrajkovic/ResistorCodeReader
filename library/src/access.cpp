@@ -204,3 +204,29 @@ void access::naryiterator()
     cout << "Number of iterations: " << n << endl;
     cout << "Sum: " << s << endl;
 }
+
+vector<objectsnmsp::AObject> opnmsp::FindByTemplate::findObjects()
+{
+    segment();
+    searchForTemplate();
+}
+
+void opnmsp::FindByTemplate::segment()
+{
+
+}
+
+void opnmsp::FindByTemplate::searchForTemplate()
+{
+
+}
+
+void opnmsp::FindByTemplate::searchForContour()
+{
+
+}
+
+vector<Point> opnmsp::FindByTemplate::sampleContour(int npoints)
+{
+
+}

@@ -11,7 +11,7 @@ using namespace cv;
 
 namespace classificationnmsp
 {
-    vector<objectsnmsp::Object*> findObjects(Mat, vector<Mat> , bool);
+    //vector<objectsnmsp::Object*> findObjects(Mat, vector<Mat> , bool);
     vector<objectsnmsp::Object*> searchbyTemplate(Mat, Mat, bool);
     void searchbyContour(vector<objectsnmsp::Object*>, Mat, vector<Mat>, vector<Mat>);
     RotatedRect findRotRect(Mat);

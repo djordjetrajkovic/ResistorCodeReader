@@ -11,10 +11,10 @@ using namespace cv;
 
 namespace objectsnmsp
 {
-    class Object {
+    class AObject {
     private:
-        void copy(const Object&);
-        void mov(Object&);
+        void copy(const AObject&);
+        void mov(AObject&);
         void del();
     protected:
         Mat* image;
@@ -28,22 +28,22 @@ namespace objectsnmsp
         string type;
     public:
         // konstruktori
-        Object() = default;
-        Object(const Object& obj)
+        AObject() = default;
+        AObject(const AObject& obj)
         {
             copy(obj);
         }
-        Object(Object&& obj)
+        AObject(AObject&& obj)
         {
             mov(obj);
         }
 
         // polimorfno kopiranje objekata
-        virtual Object* clone() const& = 0;
-        virtual Object* clone() && = 0;
+        virtual AObject* clone() const& = 0;
+        virtual AObject* clone() && = 0;
 
         // destruktor
-        virtual ~Object() = 0;
+        virtual ~AObject() = 0;
 
         // metode
         void setImage(Mat* img)
@@ -108,12 +108,12 @@ namespace objectsnmsp
         virtual string getDescription() = 0;
     };
 
-    class Unknown: public Object 
+    class Unknown: public AObject 
     {
         public:
         Unknown() = default;
-        Unknown(const Unknown& unknwn): Object(unknwn){}
-        Unknown(Unknown&& unknwn): Object(unknwn){}
+        Unknown(const Unknown& unknwn): AObject(unknwn){}
+        Unknown(Unknown&& unknwn): AObject(unknwn){}
         Unknown* clone() const& override
         {
             return new Unknown(*this);
@@ -127,12 +127,12 @@ namespace objectsnmsp
         string getDescription() override { return "Unknown"; }
     };
 
-    class Electronics: public Object
+    class Electronics: public AObject
     {
         public:
         Electronics() = default;
-        Electronics(const Electronics& electronics): Object(electronics){}
-        Electronics(Electronics&& electronics): Object(electronics){}
+        Electronics(const Electronics& electronics): AObject(electronics){}
+        Electronics(Electronics&& electronics): AObject(electronics){}
 
         virtual Electronics* clone() const& = 0;
         virtual Electronics* clone() && = 0;

@@ -75,6 +75,7 @@ target_link_libraries( test PUBLIC opencv_highgui )
 target_link_libraries( test PUBLIC opencv_imgproc )
 target_link_libraries( test PUBLIC opencv_video   )
 target_link_libraries( test PUBLIC opencv_core    )
+target_link_libraries( test PUBLIC objects        )
 
 # An input library
 add_library( input SHARED )
