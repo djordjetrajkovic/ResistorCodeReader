@@ -16,7 +16,7 @@ using namespace cv;
 #include "classification.h"
 #include "object.h"
 
-vector<objectsnmsp::Object*> findObjects(Mat isolated_img, vector<Mat> templ, bool show)
+vector<objectsnmsp::Object*> classificationnmsp::findObjects(Mat isolated_img, vector<Mat> templ, bool show)
 {
     vector<objectsnmsp::Object*> objects;
     for(auto tem: templ) objects = classificationnmsp::searchbyTemplate(isolated_img, tem, show);

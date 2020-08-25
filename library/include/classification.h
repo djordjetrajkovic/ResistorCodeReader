@@ -7,6 +7,8 @@ using namespace std;
 #include "opencv2/highgui.hpp"
 using namespace cv;
 
+#include <object.h>
+
 namespace classificationnmsp
 {
     vector<objectsnmsp::Object*> findObjects(Mat, vector<Mat> , bool);
