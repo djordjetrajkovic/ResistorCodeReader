@@ -17,7 +17,7 @@ namespace objectsnmsp
         void mov(AObject&);
         void del();
     protected:
-        Mat* image;
+        Mat image;
         Mat imagepatterngrayscale;
         Mat imagepatternbinary;
         Rect roi;
@@ -46,11 +46,11 @@ namespace objectsnmsp
         virtual ~AObject() = 0;
 
         // metode
-        void setImage(Mat* img)
+        void setImage(Mat img)
         {
             image = img;
         }
-        Mat* getImage()
+        Mat getImage()
         {
             return image;
         }

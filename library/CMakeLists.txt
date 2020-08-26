@@ -90,7 +90,7 @@ target_link_libraries( input PUBLIC opencv_highgui )
 target_link_libraries( input PUBLIC opencv_imgproc )
 target_link_libraries( input PUBLIC opencv_video   )
 target_link_libraries( input PUBLIC opencv_core    )
-
+target_link_libraries( input PUBLIC objects        )
 
 
 # Create ALIAS targets.

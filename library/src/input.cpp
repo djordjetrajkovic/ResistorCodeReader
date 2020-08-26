@@ -11,26 +11,6 @@ using namespace cv;
 #include "input.h"
 
 
-// Template grayscale
-vector<Mat> inputnmsp::loadtemplategrayscale(string path, bool show)
-{
-    Mat temple = imread(path, IMREAD_GRAYSCALE);
-    vector<Mat> templates;
-    templates.push_back(temple);
-    return templates;
-}
-
-// Template binary
-vector<Mat> inputnmsp::loadtemplatebinary(string path, bool show)
-{
-    Mat temple = imread(path, IMREAD_GRAYSCALE);
-    threshold(temple, temple, 120, 255, cv::THRESH_BINARY);
-    if (show) { namedWindow("Binary", WINDOW_NORMAL); imshow("Binary", temple); }
-    vector<Mat> templates;
-    templates.push_back(temple);
-    return templates;
-}
-
 void panmsp::File::openImageFile()
 {
     Mat img(imread(imagepath), roi);
@@ -40,4 +20,89 @@ void panmsp::File::openImageFile()
 void panmsp::File::openBckgFile()
 {
     Mat light(imread(backgroundgpath), roi);
+}
+
+void panmsp::File::execute()
+{
+    openImageFile();
+    openBckgFile();
+}
+
+void panmsp::LoadSamples::prepObjectsTemplates()
+{
+    // Load template grayscale
+    Mat templategrayscale = imread(templgraypath, IMREAD_GRAYSCALE);
+
+    // Load template binary
+    Mat templatebinary = imread(templbinpath, IMREAD_GRAYSCALE);
+    threshold(templatebinary, templatebinary, 120, 255, cv::THRESH_BINARY);
+
+    objectsnmsp::AObject *resistorsample = new objectsnmsp::Resistor();
+    resistorsample->setImagePatternGrayscale(templategrayscale);
+    resistorsample->setImagePatternBinary(templatebinary);
+
+    vector<objectsnmsp::AObject*> samples;
+    samples.push_back(resistorsample);
+    operation->setSamples(samples);
+}
+
+void panmsp::LoadSamples::execute()
+{
+    prepObjectsTemplates();
+}
+
+void panmsp::FindObjects::find()
+{
+    operation->findObjects();
+}
+
+void panmsp::FindObjects::execute()
+{
+    find();
+}
+
+void panmsp::DisplayResult::show()
+{
+    vector<objectsnmsp::AObject*> objects;
+    for (auto object: objects) cout << object << endl;
+}
+
+void panmsp::DisplayResult::execute()
+{
+    show();
+}
+
+void panmsp::Starter::start()
+{
+    string imagepath = "samples/images/image5.jpg";
+    string backgroundpath = "samples/backgrounds/background5.jpg";
+    string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
+    string resistorbinarypattern = "samples/templates/binary/template.jpg";
+
+    Rect r (300, 300, 900, 1200);
+
+    opnmsp::AFind    *operation = new opnmsp::FindByTemplate();
+    panmsp::ACommand *fromfile = new panmsp::File(operation, r, imagepath, backgroundpath);
+    panmsp::ACommand *loadsamples = new panmsp::LoadSamples(operation, resistorgrayscalepattern, resistorbinarypattern);
+    panmsp::ACommand *findobjects = new panmsp::FindObjects(operation);
+    panmsp::ACommand *displayresults = new panmsp::DisplayResult(operation);
+
+    panmsp::Composite *composite = new panmsp::Composite();
+    composite -> add(fromfile);
+    composite -> add(loadsamples);
+    composite -> add(findobjects);
+    composite -> add(displayresults);
+
+    // start from here
+    composite -> execute();
+}
+
+void panmsp::Starter::execute()
+{
+    start();
+}
+
+void panmsp::Composite::execute()
+{
+    for (auto op: operations) op -> execute();
 }

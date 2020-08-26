@@ -19,17 +19,17 @@ namespace opnmsp
         protected:
         Mat image;
         Mat background;
-        vector<objectsnmsp::AObject> objects;
-        vector<objectsnmsp::AObject> samples;
+        vector<objectsnmsp::AObject*> objects;
+        vector<objectsnmsp::AObject*> samples;
         
         public:
         void setImage(Mat img) { image = img; }
         Mat getImage() { return image; }
         void setBackground(Mat bckg) { background = bckg; }
         Mat getBackground() { return background; }
-        vector<objectsnmsp::AObject> getObjects() { return objects; }
-        void setObjects(vector<objectsnmsp::AObject> objs) { objects = objs; }
-        void setSamples(vector<objectsnmsp::AObject> smpls) { samples = smpls; }
+        vector<objectsnmsp::AObject*> getObjects() { return objects; }
+        void setObjects(vector<objectsnmsp::AObject*> objs) { objects = objs; }
+        void setSamples(vector<objectsnmsp::AObject*> smpls) { samples = smpls; }
         virtual vector<objectsnmsp::AObject> findObjects() = 0;
     };
 

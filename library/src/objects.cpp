@@ -9,12 +9,12 @@ using namespace cv;
 
 #include "object.h"
 
-objectsnmsp::Object::~Object()
+objectsnmsp::AObject::~AObject()
 {
     del();
 }
 
-void objectsnmsp::Object::copy(const Object& obj)
+void objectsnmsp::AObject::copy(const AObject& obj)
 {
     image = obj.image;
     roi = obj.roi;
@@ -26,7 +26,7 @@ void objectsnmsp::Object::copy(const Object& obj)
     
 }
 
-void objectsnmsp::Object::mov(Object& obj)
+void objectsnmsp::AObject::mov(AObject& obj)
 {
     image = obj.image;
     roi = obj.roi;
@@ -37,9 +37,8 @@ void objectsnmsp::Object::mov(Object& obj)
     type = obj.type;
 }
 
-void objectsnmsp::Object::del()
+void objectsnmsp::AObject::del()
 {
-    delete image;
     for (auto &cont: contour) delete &cont;
     contour.clear();
 }
