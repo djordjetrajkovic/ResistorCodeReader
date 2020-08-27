@@ -95,6 +95,7 @@ void panmsp::Starter::start()
 
     // start from here
     composite -> execute();
+    delete composite;
 }
 
 void panmsp::Starter::execute()
@@ -105,4 +106,9 @@ void panmsp::Starter::execute()
 void panmsp::Composite::execute()
 {
     for (auto op: operations) op -> execute();
+}
+
+panmsp::Composite::~Composite()
+{
+    for (auto operation: operations) delete operation;
 }

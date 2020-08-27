@@ -19,11 +19,14 @@ namespace panmsp
     {
         public:
         virtual void execute() = 0;
+
+        virtual ~ACommand() = 0;
     };
 
     class ALoadImage: public ACommand
     {
         public:
+        virtual ~ALoadImage() = 0;
         virtual void execute() = 0;
     };
 
@@ -40,6 +43,7 @@ namespace panmsp
         public:
         File(opnmsp::AFind* op, Rect ri, string ipath, string bpath): operation(op), roi(ri), imagepath(ipath), backgroundgpath(bpath) {}
         File(const File&) = delete;
+        ~File() override { delete operation; }
         void execute() override;
     };
 
@@ -54,6 +58,7 @@ namespace panmsp
         public:
         LoadSamples(opnmsp::AFind* op, string tmplgpath, string tmplbinpath): operation(op), templgraypath(tmplgpath), templbinpath(tmplbinpath) {}
         LoadSamples(const LoadSamples&) = delete;
+        ~LoadSamples() override { delete operation; }
         void execute() override;
     };
 
@@ -66,6 +71,7 @@ namespace panmsp
         public:
         FindObjects(opnmsp::AFind* op): operation(op) {}
         FindObjects(const FindObjects&) = delete;
+        ~FindObjects() override { delete operation; }
         void execute() override;
     };
 
@@ -78,6 +84,7 @@ namespace panmsp
         public:
         DisplayResult(opnmsp::AFind* op): operation(op) {}
         DisplayResult(const DisplayResult&) = delete;
+        ~DisplayResult() override { delete operation; }
         void execute() override;
     };
 
@@ -100,6 +107,7 @@ namespace panmsp
         public:
         Composite() {}
         Composite(const Composite&) = delete;
+        ~Composite() override;
         void add(ACommand *command) { operations.push_back(command); }
         void removelast() { operations.pop_back(); }
         void execute() override;

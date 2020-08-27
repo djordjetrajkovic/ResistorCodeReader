@@ -114,6 +114,9 @@ namespace objectsnmsp
         Unknown() = default;
         Unknown(const Unknown& unknwn): AObject(unknwn){}
         Unknown(Unknown&& unknwn): AObject(unknwn){}
+
+        ~Unknown() {}
+
         Unknown* clone() const& override
         {
             return new Unknown(*this);
@@ -133,7 +136,7 @@ namespace objectsnmsp
         Electronics() = default;
         Electronics(const Electronics& electronics): AObject(electronics){}
         Electronics(Electronics&& electronics): AObject(electronics){}
-
+        virtual ~Electronics() = 0;
         virtual Electronics* clone() const& = 0;
         virtual Electronics* clone() && = 0;
         const string getCategory() const override { return "Electronics"; }
@@ -157,7 +160,7 @@ namespace objectsnmsp
         Resistor() = default;
         Resistor (const Resistor& resistor);
         Resistor (Resistor&& resistor);
-        
+        ~Resistor() override {}
         Resistor* clone() const& override
         {
             return new Resistor(*this);
