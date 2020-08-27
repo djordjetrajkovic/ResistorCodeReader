@@ -2,15 +2,6 @@
 #include <string>
 
 #include <object.h>
-namespace access
-{
-    void locationAt(std::string);
-    void locationPtr(std::string);
-    void iterator(std::string);
-    void iterator2();
-    void naryiterator(std::string);
-    void naryiterator();
-}
 
 namespace opnmsp
 {
@@ -39,10 +30,10 @@ namespace opnmsp
         vector<objectsnmsp::AObject> findObjects() override;
         
         private:
-        void segment();
-        void searchForTemplate();
-        void searchForContour();
-        RotatedRect searchForRotatedRect();
-        vector<Point> sampleContour(int);
+        void segment(Mat);
+        void searchByTemplate(Mat);
+        void searchByContour(Mat, Mat, objectsnmsp::AObject*);
+        RotatedRect findRotRect(Mat);
+        vector<Point> sampleContour(Mat, int);
     };
 }
