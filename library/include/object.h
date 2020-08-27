@@ -106,6 +106,8 @@ namespace objectsnmsp
         virtual const string getCategory() const = 0;
         virtual const string getType() const = 0;
         virtual string getDescription() = 0;
+
+        friend ostream & operator << (ostream &out, const AObject &aobject) getDescription();
     };
 
     class Unknown: public AObject 

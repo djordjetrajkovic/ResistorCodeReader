@@ -45,7 +45,7 @@ void objectsnmsp::AObject::del()
 
 string objectsnmsp::Resistor::getDescription()
 {
-    return "resistor value by colors";
+    return "Resistor value by colors";
 }
 
 objectsnmsp::Resistor::Resistor(const Resistor& resistor):Electronics(resistor)
