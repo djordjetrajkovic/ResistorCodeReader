@@ -43,9 +43,14 @@ void objectsnmsp::AObject::del()
     contour.clear();
 }
 
-string objectsnmsp::Resistor::getDescription()
+objectsnmsp::Electronics::~Electronics()
 {
-    return "Resistor value by colors";
+    
+}
+
+void objectsnmsp::Resistor::getDescription(ostream out)
+{
+    out << "Resistor value by colors";
 }
 
 objectsnmsp::Resistor::Resistor(const Resistor& resistor):Electronics(resistor)

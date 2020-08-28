@@ -10,24 +10,6 @@ project( OpenCVLibs
 # Find Packege
 find_package(OpenCV 4.4)
 
-# An classification library
-add_library( classification SHARED )
-
-target_sources( classification 
-    PRIVATE "src/classification.cpp"
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/classification.h"        
-)
-
-
-target_include_directories( classification PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-
-target_link_libraries( classification PUBLIC opencv_highgui )
-target_link_libraries( classification PUBLIC opencv_imgproc )
-target_link_libraries( classification PUBLIC opencv_video   )
-target_link_libraries( classification PUBLIC opencv_core    )
-target_link_libraries( classification PUBLIC opencv_shape   )
-target_link_libraries( classification PUBLIC objects        )
-
 # An objects library
 add_library( objects SHARED )
 
@@ -44,24 +26,6 @@ target_link_libraries( objects PUBLIC opencv_imgproc )
 target_link_libraries( objects PUBLIC opencv_video   )
 target_link_libraries( objects PUBLIC opencv_core    )
 
-# An segmentation library
-add_library( segmentation SHARED )
-
-target_sources( segmentation 
-    PRIVATE "src/segmentation.cpp"
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/segmentation.h"        
-)
-message( ${CMAKE_CURRENT_SOURCE_DIR} )
-target_include_directories( segmentation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-
-target_link_libraries( segmentation PUBLIC opencv_highgui )
-target_link_libraries( segmentation PUBLIC opencv_imgproc )
-target_link_libraries( segmentation PUBLIC opencv_video   )
-target_link_libraries( segmentation PUBLIC opencv_core    )
-target_link_libraries( segmentation PUBLIC opencv_shape   )
-target_link_libraries( segmentation PUBLIC classification )
-target_link_libraries( segmentation PUBLIC objects        )
-
 # An test library
 add_library( test SHARED )
 
@@ -76,6 +40,7 @@ target_link_libraries( test PUBLIC opencv_imgproc )
 target_link_libraries( test PUBLIC opencv_video   )
 target_link_libraries( test PUBLIC opencv_core    )
 target_link_libraries( test PUBLIC objects        )
+target_link_libraries( test PUBLIC opencv_shape   )
 
 # An input library
 add_library( input SHARED )
@@ -91,11 +56,10 @@ target_link_libraries( input PUBLIC opencv_imgproc )
 target_link_libraries( input PUBLIC opencv_video   )
 target_link_libraries( input PUBLIC opencv_core    )
 target_link_libraries( input PUBLIC objects        )
+target_link_libraries( input PUBLIC test           )
 
 
 # Create ALIAS targets.
-add_library( MyOpenCV::classification ALIAS classification ) 
-add_library( MyOpenCV::segmentation   ALIAS segmentation )
 add_library( MyOpenCV::test   ALIAS test )
 add_library( MyOpenCV::input   ALIAS input )
 add_library( MyOpenCV::objects ALIAS objects)

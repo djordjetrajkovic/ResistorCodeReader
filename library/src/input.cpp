@@ -10,16 +10,20 @@ using namespace cv;
 
 #include "input.h"
 
+panmsp::ACommand::~ACommand(){}
+
+panmsp::ALoadImage::~ALoadImage(){}
 
 void panmsp::File::openImageFile()
 {
-    Mat img(imread(imagepath), roi);
-    operation->setImage(img);
+    Mat image(imread(imagepath), roi);
+    operation->setImage(image);
 }
 
 void panmsp::File::openBckgFile()
 {
-    Mat light(imread(backgroundgpath), roi);
+    Mat background(imread(backgroundgpath), roi);
+    operation->setBackground(background);
 }
 
 void panmsp::File::execute()

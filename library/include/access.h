@@ -1,3 +1,6 @@
+#ifndef _access_h_
+#define _access_h_
+
 #include "opencv2/core/utility.hpp"
 #include <string>
 
@@ -21,13 +24,13 @@ namespace opnmsp
         vector<objectsnmsp::AObject*> getObjects() { return objects; }
         void setObjects(vector<objectsnmsp::AObject*> objs) { objects = objs; }
         void setSamples(vector<objectsnmsp::AObject*> smpls) { samples = smpls; }
-        virtual vector<objectsnmsp::AObject> findObjects() = 0;
+        virtual void findObjects() = 0;
     };
 
     class FindByTemplate : public AFind
     {
         public:
-        vector<objectsnmsp::AObject> findObjects() override;
+        void findObjects() override;
         
         private:
         void segment(Mat);
@@ -37,3 +40,5 @@ namespace opnmsp
         vector<Point> sampleContour(Mat, int);
     };
 }
+
+#endif

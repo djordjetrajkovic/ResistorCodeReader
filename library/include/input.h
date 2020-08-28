@@ -1,3 +1,6 @@
+#ifndef _input_h_
+#define _input_h_
+
 // STD Libs includes
 #include <iostream>
 #include <vector>
@@ -113,3 +116,5 @@ namespace panmsp
         void execute() override;
     };
 }
+
+#endif

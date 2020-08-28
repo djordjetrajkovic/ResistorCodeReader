@@ -206,7 +206,7 @@ using namespace cv;
 //     cout << "Sum: " << s << endl;
 // }
 
-vector<objectsnmsp::AObject> opnmsp::FindByTemplate::findObjects()
+void opnmsp::FindByTemplate::findObjects()
 {
     Mat img_isolated;
     segment(img_isolated);
@@ -330,11 +330,11 @@ void opnmsp::FindByTemplate::searchByContour(Mat image_local, Mat temple, object
     if (dis < 1)
     {
         //rectangle(img, rect, Scalar(0), 1);
-        RotatedRect rr  = findRotRect(isolated_img(rect));
+        //RotatedRect rr  = findRotRect(isolated_img(rect));
         objectsnmsp::AObject *newobject = sample->clone();
         newobject->setImage(image_local);
         newobject->setConture(c1);
-        newobject->setRotRect(rr);
+        //newobject->setRotRect(rr);
         objects.push_back(newobject);
     }
     //stringstream ss;

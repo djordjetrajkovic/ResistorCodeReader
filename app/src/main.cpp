@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 
-#include "segmentation.h"
 #include "access.h"
 #include "input.h" 
 
