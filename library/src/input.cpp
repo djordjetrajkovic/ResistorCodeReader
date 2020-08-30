@@ -81,7 +81,7 @@ void panmsp::DisplayResult::show()
         //Rect brect = object->getRotRect().boundingRect();
         //rectangle(image, brect, Scalar(0,0,255), 1);
         
-        //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
+        namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
         
         
         if (object != nullptr) cout << *object << endl;

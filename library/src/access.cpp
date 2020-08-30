@@ -314,11 +314,14 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
             //cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
             Mat image_of_interest = img_isolated(rect);
             searchByContour(image_of_interest, sample->getImagePatternBinary(), sample, rect);
-
+            
+            // drawing
+            //Scalar color = Scalar(rand() % 255);
+            //rectangle(outputContours, rect, color, 1);
            
-            int broj = (int)(rand() % 100);
-            stringstream ss; ss << broj ;
-            namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image_of_interest);
+            //int broj = (int)(rand() % 100);
+            //stringstream ss; ss << broj ;
+            //namedWindow(ss.str()); imshow(ss.str(), image_of_interest);
         }
         drawContours(outputContours, contours, -1, Scalar(125));
         if (show) { namedWindow("KONTURE", WINDOW_NORMAL); imshow("KONTURE", outputContours); } 
