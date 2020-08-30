@@ -273,13 +273,15 @@ void opnmsp::FindByTemplate::segment(Mat& img_isolated)
 
 void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
 {
-    bool show = true;
+    bool show = false;
+    
     for (auto sample: samples)
     {
         Mat ftmp[6];
+        //if (show) { namedWindow("PATTERN"); imshow("PATTERN", sample->getImagePatternBinary()); }
         for (int i=0; i<6; ++i)
         {
-            matchTemplate(img_isolated, sample->getImagePatternGrayscale(), ftmp[i], i);
+            matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[i], i);
             normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
         }
         if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
@@ -308,8 +310,8 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
             auto rect = boundingRect(contour);
             rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
             rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
-            Mat image_of_interest = image(rect);
-            //searchByContour(image_of_interest, sample->getImagePatternBinary(), sample);
+            Mat image_of_interest = outputContours(rect);
+            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample);
             
             // drawing
             Scalar color = Scalar(rand() % 255);
@@ -332,7 +334,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_local, Mat temple, objec
     Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
     vector<Point> c1 = sampleContour(image_local, 300);
     if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
-    //cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
+    cout << "Kontura, Shape context distance: " << dis << endl;
     if (dis < 1)
     {
         //rectangle(img, rect, Scalar(0), 1);
