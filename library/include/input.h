@@ -46,7 +46,7 @@ namespace panmsp
         public:
         File(opnmsp::AFind* op, Rect ri, string ipath, string bpath): operation(op), roi(ri), imagepath(ipath), backgroundgpath(bpath) {}
         File(const File&) = delete;
-        ~File() override { delete operation; }
+        ~File() override { }
         void execute() override;
     };
 
@@ -61,7 +61,7 @@ namespace panmsp
         public:
         LoadSamples(opnmsp::AFind* op, string tmplgpath, string tmplbinpath): operation(op), templgraypath(tmplgpath), templbinpath(tmplbinpath) {}
         LoadSamples(const LoadSamples&) = delete;
-        ~LoadSamples() override { delete operation; }
+        ~LoadSamples() override { }
         void execute() override;
     };
 
@@ -74,7 +74,7 @@ namespace panmsp
         public:
         FindObjects(opnmsp::AFind* op): operation(op) {}
         FindObjects(const FindObjects&) = delete;
-        ~FindObjects() override { delete operation; }
+        ~FindObjects() override { }
         void execute() override;
     };
 
@@ -87,7 +87,7 @@ namespace panmsp
         public:
         DisplayResult(opnmsp::AFind* op): operation(op) {}
         DisplayResult(const DisplayResult&) = delete;
-        ~DisplayResult() override { delete operation; }
+        ~DisplayResult() override { }
         void execute() override;
     };
 

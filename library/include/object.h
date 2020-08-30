@@ -109,9 +109,9 @@ namespace objectsnmsp
         // virtual methods
         virtual const string getCategory() const = 0;
         virtual const string getType() const = 0;
-        virtual void getDescription(ostream) = 0;
+        virtual void getDescription(ostream&) = 0;
 
-        //friend ostream & operator << (ostream &out, AObject &aobject) { aobject.getDescription(out); }
+        friend ostream & operator << (ostream &out, AObject &aobject) { aobject.getDescription(out); }
     };
 
     class Unknown: public AObject 
@@ -133,7 +133,7 @@ namespace objectsnmsp
         }
         const string getCategory() const override { return "Unknown"; }
         const string getType() const override { return "Unknown"; }
-        void getDescription(ostream out) override { out << "Unknown"; }
+        void getDescription(ostream& out) override { out << "Unknown"; }
     };
 
     class Electronics: public AObject
@@ -147,7 +147,7 @@ namespace objectsnmsp
         virtual Electronics* clone() && = 0;
         const string getCategory() const = 0;
         virtual const string getType() const = 0;
-        virtual void getDescription(ostream) = 0;        
+        virtual void getDescription(ostream&) = 0;        
     };
 
     class Resistor: public Electronics
@@ -177,7 +177,7 @@ namespace objectsnmsp
         }
         const string getCategory() const override { return "Electronics"; }
         const string getType() const override { return "Resistor"; }
-        void getDescription(ostream out) override;
+        void getDescription(ostream& out) override;
     };
 }
 

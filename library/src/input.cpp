@@ -68,7 +68,7 @@ void panmsp::FindObjects::execute()
 void panmsp::DisplayResult::show()
 {
     vector<objectsnmsp::AObject*> objects;
-    for (auto object: objects) cout << object << endl;
+    //for (auto object: objects) if(object != nullptr) cout << *object << endl;
 }
 
 void panmsp::DisplayResult::execute()
@@ -99,6 +99,7 @@ void panmsp::Starter::start()
 
     // start from here
     composite -> execute();
+    delete operation;
     delete composite;
 }
 
@@ -114,5 +115,5 @@ void panmsp::Composite::execute()
 
 panmsp::Composite::~Composite()
 {
-    for (auto operation: operations) delete operation;
+    for (auto& operation: operations) delete operation;
 }

@@ -210,20 +210,26 @@ void opnmsp::FindByTemplate::findObjects()
 {
     Mat img_isolated;
     segment(img_isolated);
-    searchByTemplate(img_isolated);
+    //searchByTemplate(img_isolated);
 }
 
 void opnmsp::FindByTemplate::segment(Mat img_isolated)
 {
-    bool show = false;
+    bool show = true;
+    if (show) { namedWindow("Original Image"); imshow("Original Image", image); }
+    // convert to grayscale
+    Mat image_grayscale, bckg_grayscale;
+    cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
+    cvtColor(background, bckg_grayscale, COLOR_BGR2GRAY);
+    
     // Median filter applying
     Mat img_median;
-    medianBlur(image, img_median, 7);
+    medianBlur(image_grayscale, img_median, 7);
     if (show) { namedWindow("Median"); imshow("Median", img_median); }
 
     // Background substruction
     Mat img_comp;
-    img_comp = background - img_median;
+    img_comp = bckg_grayscale - img_median;
     if (show) { namedWindow("Compensated"); imshow("Compensated", img_comp);}
 
     // Threshold
@@ -331,7 +337,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat image_local, Mat temple, object
     {
         //rectangle(img, rect, Scalar(0), 1);
         //RotatedRect rr  = findRotRect(isolated_img(rect));
-        objectsnmsp::AObject *newobject = sample->clone();
+        objectsnmsp::AObject *newobject = sample->clone(); // Proveri dal treba izvan petlje
         newobject->setImage(image_local);
         newobject->setConture(c1);
         //newobject->setRotRect(rr);
@@ -394,4 +400,10 @@ RotatedRect opnmsp::FindByTemplate::findRotRect(Mat sample)
         imshow(ime.str(), obrazac);
     }
     return r;
+}
+
+opnmsp::AFind::~AFind()
+{
+    for(auto object: objects) delete object;
+    for(auto sample: samples) delete sample;
 }

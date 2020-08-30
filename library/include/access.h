@@ -25,13 +25,15 @@ namespace opnmsp
         void setObjects(vector<objectsnmsp::AObject*> objs) { objects = objs; }
         void setSamples(vector<objectsnmsp::AObject*> smpls) { samples = smpls; }
         virtual void findObjects() = 0;
+        virtual ~AFind() = 0;
     };
 
     class FindByTemplate : public AFind
     {
         public:
         void findObjects() override;
-        
+        ~FindByTemplate() override {}
+
         private:
         void segment(Mat);
         void searchByTemplate(Mat);

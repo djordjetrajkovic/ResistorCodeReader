@@ -48,7 +48,7 @@ objectsnmsp::Electronics::~Electronics()
     
 }
 
-void objectsnmsp::Resistor::getDescription(ostream out)
+void objectsnmsp::Resistor::getDescription(ostream& out)
 {
     out << "Resistor value by colors";
 }
