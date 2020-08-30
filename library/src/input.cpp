@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <sstream>
 using namespace std;
 
 // OpenCV includes
@@ -67,8 +68,24 @@ void panmsp::FindObjects::execute()
 
 void panmsp::DisplayResult::show()
 {
-    vector<objectsnmsp::AObject*> objects;
-    //for (auto object: objects) if(object != nullptr) cout << *object << endl;
+    for (auto object: operation->getObjects()) 
+    {
+        Mat image = (object -> getImage()).clone();
+        int broj = (int)(rand() % 100);
+        stringstream ss; ss << broj ;
+        
+        
+        Point2f vertices[4];
+        object->getRotRect().points(vertices);
+        for (int i = 0; i < 4; i++) line(image, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 5);
+        //Rect brect = object->getRotRect().boundingRect();
+        //rectangle(image, brect, Scalar(0,0,255), 1);
+        
+        namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
+        
+        
+        if (object != nullptr) cout << *object << endl;
+    }
 }
 
 void panmsp::DisplayResult::execute()
