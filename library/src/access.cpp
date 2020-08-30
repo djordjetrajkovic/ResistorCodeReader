@@ -310,65 +310,70 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
             auto rect = boundingRect(contour);
             rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
             rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
-            Mat image_of_interest = outputContours(rect);
-            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample);
-            
-            // drawing
-            Scalar color = Scalar(rand() % 255);
-            rectangle(outputContours, rect, color, 1);
+            //Mat image_grayscale;
+            //cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
+            Mat image_of_interest = img_isolated(rect);
+            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample, rect);
+
+           
+            int broj = (int)(rand() % 100);
+            stringstream ss; ss << broj ;
+            namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image_of_interest);
         }
         drawContours(outputContours, contours, -1, Scalar(125));
-        if (show) { namedWindow("KONTURE"); imshow("KONTURE", outputContours); } 
+        if (show) { namedWindow("KONTURE", WINDOW_NORMAL); imshow("KONTURE", outputContours); } 
     }
 }
 
-void opnmsp::FindByTemplate::searchByContour(Mat& image_local, Mat temple, objectsnmsp::AObject* sample)
+void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, objectsnmsp::AObject* sample, Rect rect)
 {
+    //int broj = (int)(rand() % 100);
+    //stringstream ss; ss << broj ;
+    //namedWindow(ss.str()); imshow(ss.str(), image_contour);
 
-    vector<Point> c2 = sampleContour(temple, 300);
-    float dis = 0;
     vector<vector<Point>> templateBinaryContours;
-    findContours(temple, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE); // kontura binarne slike
+    findContours(temple, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE); // konture binarne slike
+    vector<Point> c2 = templateBinaryContours.at(0);
     
-    // Shape Context Distance Extractor
+    // Shape Context Distance Extractor 
+    float dis = 0;
     Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
-    vector<Point> c1 = sampleContour(image_local, 300);
-    if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
-    cout << "Kontura, Shape context distance: " << dis << endl;
-    if (dis < 1)
+    vector<vector<Point>> imagecontours;
+    findContours(image_contour, imagecontours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+    for (auto contour: imagecontours)
     {
-        //rectangle(img, rect, Scalar(0), 1);
-        //RotatedRect rr  = findRotRect(isolated_img(rect));
-        objectsnmsp::AObject *newobject = sample->clone(); // Proveri dal treba izvan petlje
-        newobject->setImage(image_local);
-        newobject->setConture(c1);
-        //newobject->setRotRect(rr);
-        objects.push_back(newobject);
+        vector<Point> cc = sampleContour(contour,150);
+        if (!cc.empty()) 
+        {
+            dis = mysc -> computeDistance(c2, cc);
+            cout << "Kontura, Shape context distance: " << dis << endl;
+            if (dis > 4 )
+            {
+                RotatedRect rr = fitEllipse(cc);
+                objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
+                newobject->setImage(image(rect));
+                newobject->setConture(cc);
+                newobject->setRotRect(rr);
+                objects.push_back(newobject);
+            }
+        }
+        
     }
-    //stringstream ss;
-    //ss << "Povrsina :" << rect.area();
-    //putText(img, ss.str(), Point2d(rect.x, rect.y), FONT_HERSHEY_SIMPLEX, 0.5 , Scalar(255));
     
-    //drawContours(image, konture, -1, Scalar(125));
-    //imshow("Image", img);
 }
 
-vector<Point> opnmsp::FindByTemplate::sampleContour(Mat img_local, int npoints)
+vector<Point> opnmsp::FindByTemplate::sampleContour(vector<Point> contour, int npoints)
 {
-    vector<vector<Point>> _contours;
     vector<Point>all_points;
-    findContours(img_local, _contours, RETR_LIST, CHAIN_APPROX_NONE);
-    if (_contours.empty()) return all_points;
-    for (int i=0; i<_contours.size();i++)
+    if (contour.empty()) return all_points;
+    for (int i=0; i<contour.size(); i++)
     {
-        for (int j=0;j<_contours[i].size();j++)
-        {
-            all_points.push_back(_contours[i][j]);
-        }
+        all_points.push_back(contour[i]);
+        
     }
 
     int dummy = 0;
-    for (int add=(int)all_points.size();add<npoints;add++)
+    for (int add=(int)all_points.size(); add<npoints; add++)
     {
         all_points.push_back(all_points[dummy++]);
     }

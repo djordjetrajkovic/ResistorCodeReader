@@ -39,7 +39,7 @@ void objectsnmsp::AObject::mov(AObject& obj)
 
 void objectsnmsp::AObject::del()
 {
-    for (auto &cont: contour) delete &cont;
+    //for (auto &cont: contour) delete &cont;
     contour.clear();
 }
 
