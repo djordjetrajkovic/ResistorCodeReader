@@ -210,12 +210,12 @@ void opnmsp::FindByTemplate::findObjects()
 {
     Mat img_isolated;
     segment(img_isolated);
-    //searchByTemplate(img_isolated);
+    searchByTemplate(img_isolated);
 }
 
-void opnmsp::FindByTemplate::segment(Mat img_isolated)
+void opnmsp::FindByTemplate::segment(Mat& img_isolated)
 {
-    bool show = true;
+    bool show = false;
     if (show) { namedWindow("Original Image"); imshow("Original Image", image); }
     // convert to grayscale
     Mat image_grayscale, bckg_grayscale;
@@ -273,7 +273,7 @@ void opnmsp::FindByTemplate::segment(Mat img_isolated)
 
 void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
 {
-    bool show = false;
+    bool show = true;
     for (auto sample: samples)
     {
         Mat ftmp[6];
@@ -282,12 +282,12 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
             matchTemplate(img_isolated, sample->getImagePatternGrayscale(), ftmp[i], i);
             normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
         }
-        //if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
-        //if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
-        //if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
-        //if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
-        //if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
+        if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
+        if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
+        if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
+        if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
         if (show) { namedWindow("CCOEFF"); imshow( "CCOEFF", ftmp[4] ); }
+        if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
         
         Mat img_thrld;
         threshold(ftmp[4], img_thrld, 0.5, 1, THRESH_BINARY);
@@ -309,7 +309,7 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
             rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
             rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
             Mat image_of_interest = image(rect);
-            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample);
+            //searchByContour(image_of_interest, sample->getImagePatternBinary(), sample);
             
             // drawing
             Scalar color = Scalar(rand() % 255);
@@ -320,17 +320,17 @@ void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
     }
 }
 
-void opnmsp::FindByTemplate::searchByContour(Mat image_local, Mat temple, objectsnmsp::AObject* sample)
+void opnmsp::FindByTemplate::searchByContour(Mat& image_local, Mat temple, objectsnmsp::AObject* sample)
 {
 
-    vector<Point> c2 = sampleContour(temple, RETR_LIST);
+    vector<Point> c2 = sampleContour(temple, 300);
     float dis = 0;
     vector<vector<Point>> templateBinaryContours;
     findContours(temple, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE); // kontura binarne slike
     
     // Shape Context Distance Extractor
     Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
-    vector<Point> c1 = sampleContour(image_local, RETR_LIST);
+    vector<Point> c1 = sampleContour(image_local, 300);
     if (!c1.empty() && !c2.empty()) dis = mysc -> computeDistance(c1, c2);
     //cout << "Kontura: " << rect.area() << ", "<< "Shape context distance: " << dis << endl;
     if (dis < 1)

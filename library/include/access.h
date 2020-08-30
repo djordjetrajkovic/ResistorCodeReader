@@ -35,9 +35,9 @@ namespace opnmsp
         ~FindByTemplate() override {}
 
         private:
-        void segment(Mat);
+        void segment(Mat&);
         void searchByTemplate(Mat);
-        void searchByContour(Mat, Mat, objectsnmsp::AObject*);
+        void searchByContour(Mat&, Mat, objectsnmsp::AObject*);
         RotatedRect findRotRect(Mat);
         vector<Point> sampleContour(Mat, int);
     };
