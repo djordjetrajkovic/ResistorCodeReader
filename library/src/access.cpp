@@ -346,11 +346,11 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
     for (auto contour: imagecontours)
     {
         vector<Point> cc = sampleContour(contour,150);
-        if (!cc.empty()) 
+        if (!contour.empty() && contour.size()>60) 
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 10000 )
+            if (dis < 100 )
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
