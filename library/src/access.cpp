@@ -417,3 +417,21 @@ opnmsp::AFind::~AFind()
     for(auto object: objects) delete object;
     for(auto sample: samples) delete sample;
 }
+
+bool opnmsp::AFind::isColorInRange(Mat img, struct color)
+{
+    Mat img_hsv, histogram;
+    cvtColor( img, img_hsv, COLOR_BGR2HSV);
+    int h_bins = 256; 
+    int s_bins = 180;
+    int v_bins = 256;
+    int histSize[] = { h_bins, s_bins, v_bins };
+
+    float h_ranges[] = { 0, 180 };
+    float s_ranges[] = { 0, 256 };
+    float v_ranges[] = { 0, 256 };
+
+    const float* ranges[] = { h_ranges, s_ranges, v_ranges };
+    int channels[] = { 0, 1, 2};
+    calcHist( &img_hsv, 1, channels, Mat(), histogram, 3, histSize, ranges, true, false );
+}

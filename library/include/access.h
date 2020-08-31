@@ -40,6 +40,7 @@ namespace opnmsp
         void searchByContour(Mat&, Mat, objectsnmsp::AObject*, Rect);
         RotatedRect findRotRect(Mat);
         vector<Point> sampleContour(vector<Point>, int);
+        bool isColorInRange(Mat, Scalar);
     };
 }
 
