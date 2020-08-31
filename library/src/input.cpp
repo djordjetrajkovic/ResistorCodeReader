@@ -77,7 +77,7 @@ void panmsp::DisplayResult::show()
         
         Point2f vertices[4];
         object->getRotRect().points(vertices);
-        for (int i = 0; i < 4; i++) line(image, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 5);
+        for (int i = 0; i < 4; i++) line(image, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
         //Rect brect = object->getRotRect().boundingRect();
         //rectangle(image, brect, Scalar(0,0,255), 1);
         

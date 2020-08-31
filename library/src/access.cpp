@@ -350,7 +350,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis > 4 )
+            if (dis < 10000 )
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
