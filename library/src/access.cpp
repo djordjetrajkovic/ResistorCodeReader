@@ -208,14 +208,27 @@ using namespace cv;
 
 void opnmsp::FindByTemplate::findObjects()
 {
-    Mat img_isolated;
-    segment(img_isolated);
-    searchByTemplate(img_isolated);
+    Mat img_isolated = segment();
+    for (auto sample: samples)
+    {
+        vector<vector<Point>>* contours = searchByTemplate(img_isolated, sample);
+        for(auto contour: *contours)
+        {
+            auto rect = boundingRect(contour);
+            rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
+            rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
+            //Mat image_grayscale;
+            //cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
+            Mat image_of_interest = img_isolated(rect);
+            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample, rect);
+        }
+    }
+    
 }
 
-void opnmsp::FindByTemplate::segment(Mat& img_isolated)
+Mat opnmsp::FindByTemplate::segment()
 {
-    bool show = false;
+    bool show = true;
     if (show) { namedWindow("Original Image"); imshow("Original Image", image); }
     // convert to grayscale
     Mat image_grayscale, bckg_grayscale;
@@ -223,13 +236,14 @@ void opnmsp::FindByTemplate::segment(Mat& img_isolated)
     cvtColor(background, bckg_grayscale, COLOR_BGR2GRAY);
     
     // Median filter applying
-    Mat img_median;
+    Mat img_median, bck_median;
     medianBlur(image_grayscale, img_median, 7);
+    medianBlur(bckg_grayscale, bck_median, 7);
     if (show) { namedWindow("Median"); imshow("Median", img_median); }
 
     // Background substruction
     Mat img_comp;
-    img_comp = bckg_grayscale - img_median;
+    img_comp = bck_median - img_median;
     if (show) { namedWindow("Compensated"); imshow("Compensated", img_comp);}
 
     // Threshold
@@ -250,14 +264,13 @@ void opnmsp::FindByTemplate::segment(Mat& img_isolated)
     if (num_objects < 2) 
     {
         cout << "No objects detected!" << endl;
-        return;
     }
     else
     {
         cout << "Detected objects num: " << num_objects - 1 << endl;
     }
     
-    img_isolated = Mat::zeros(image.rows, image.cols, CV_8UC1);
+    Mat img_isolated = Mat::zeros(image.rows, image.cols, CV_8UC1);
     labels.convertTo(labels, CV_16U);
     centroids.convertTo(centroids, CV_16U);
     for (auto i = 1; i < num_objects; i++)
@@ -269,63 +282,45 @@ void opnmsp::FindByTemplate::segment(Mat& img_isolated)
         img_isolated.setTo(color, mask);
     }
     if (show) { namedWindow("Isolated objects"); imshow("Isolated objects", img_isolated); }
+    return img_isolated;
 }
 
-void opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated)
+vector<vector<Point>>* opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated, objectsnmsp::AObject* sample)
 {
     bool show = false;
-    
-    for (auto sample: samples)
+
+    Mat ftmp[6];
+    //if (show) { namedWindow("PATTERN"); imshow("PATTERN", sample->getImagePatternBinary()); }
+    for (int i=0; i<6; ++i)
     {
-        Mat ftmp[6];
-        //if (show) { namedWindow("PATTERN"); imshow("PATTERN", sample->getImagePatternBinary()); }
-        for (int i=0; i<6; ++i)
-        {
-            matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[i], i);
-            normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
-        }
-        if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
-        if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
-        if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
-        if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
-        if (show) { namedWindow("CCOEFF"); imshow( "CCOEFF", ftmp[4] ); }
-        if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
-        
-        Mat img_thrld;
-        threshold(ftmp[4], img_thrld, 0.5, 1, THRESH_BINARY);
-        if (show) { namedWindow("Thresh image"); imshow("Thresh image", img_thrld); }
-
-        Mat img_rem_small;
-        Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-        dilate(img_thrld, img_rem_small, kernel, Point(-1,-1), 1);
-        //morphologyEx(img_thrld, rem_small_img, MORPH_CLOSE,kernel);
-        if (show) { namedWindow("DILATE"); imshow("DILATE", img_rem_small); }
-
-        img_rem_small.convertTo(img_rem_small, CV_8UC1, 255.0);
-        vector<vector<Point>> contours;
-        findContours(img_rem_small, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-        Mat outputContours(img_rem_small.rows, img_rem_small.cols, img_rem_small.type());
-        for(auto contour: contours)
-        {
-            auto rect = boundingRect(contour);
-            rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
-            rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
-            //Mat image_grayscale;
-            //cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
-            Mat image_of_interest = img_isolated(rect);
-            searchByContour(image_of_interest, sample->getImagePatternBinary(), sample, rect);
-            
-            // drawing
-            //Scalar color = Scalar(rand() % 255);
-            //rectangle(outputContours, rect, color, 1);
-           
-            //int broj = (int)(rand() % 100);
-            //stringstream ss; ss << broj ;
-            //namedWindow(ss.str()); imshow(ss.str(), image_of_interest);
-        }
-        drawContours(outputContours, contours, -1, Scalar(125));
-        if (show) { namedWindow("KONTURE", WINDOW_NORMAL); imshow("KONTURE", outputContours); } 
+        matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[i], i);
+        normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
     }
+    if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
+    if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
+    if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
+    if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
+    if (show) { namedWindow("CCOEFF"); imshow( "CCOEFF", ftmp[4] ); }
+    if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
+    
+    Mat img_thrld;
+    threshold(ftmp[4], img_thrld, 0.5, 1, THRESH_BINARY);
+    if (show) { namedWindow("Thresh image"); imshow("Thresh image", img_thrld); }
+
+    Mat img_rem_small;
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+    dilate(img_thrld, img_rem_small, kernel, Point(-1,-1), 1);
+    //morphologyEx(img_thrld, rem_small_img, MORPH_CLOSE,kernel);
+    if (show) { namedWindow("DILATE"); imshow("DILATE", img_rem_small); }
+
+    img_rem_small.convertTo(img_rem_small, CV_8UC1, 255.0);
+    vector<vector<Point>>* contours = new vector<vector<Point>>();
+    findContours(img_rem_small, *contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    Mat outputContours(img_rem_small.rows, img_rem_small.cols, img_rem_small.type());
+    
+    drawContours(outputContours, *contours, -1, Scalar(125));
+    if (show) { namedWindow("KONTURE", WINDOW_NORMAL); imshow("KONTURE", outputContours); }
+    return contours;
 }
 
 void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, objectsnmsp::AObject* sample, Rect rect)
@@ -335,22 +330,22 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
     //namedWindow(ss.str()); imshow(ss.str(), image_contour);
 
     vector<vector<Point>> templateBinaryContours;
-    findContours(temple, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE); // konture binarne slike
+    findContours(temple, templateBinaryContours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
     vector<Point> c2 = templateBinaryContours.at(0);
     
-    // Shape Context Distance Extractor 
+    // Shape Context Distance Extractor
     float dis = 0;
     Ptr<ShapeContextDistanceExtractor> mysc = createShapeContextDistanceExtractor();
     vector<vector<Point>> imagecontours;
     findContours(image_contour, imagecontours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
     for (auto contour: imagecontours)
     {
-        vector<Point> cc = sampleContour(contour,150);
+        vector<Point> cc = sampleContour(contour, 150);
         if (!contour.empty() && contour.size()>60) 
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 100 )
+            if (dis < 700 )
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
@@ -360,9 +355,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
                 objects.push_back(newobject);
             }
         }
-        
     }
-    
 }
 
 vector<Point> opnmsp::FindByTemplate::sampleContour(vector<Point> contour, int npoints)
@@ -418,20 +411,20 @@ opnmsp::AFind::~AFind()
     for(auto sample: samples) delete sample;
 }
 
-bool opnmsp::AFind::isColorInRange(Mat img, struct color)
-{
-    Mat img_hsv, histogram;
-    cvtColor( img, img_hsv, COLOR_BGR2HSV);
-    int h_bins = 256; 
-    int s_bins = 180;
-    int v_bins = 256;
-    int histSize[] = { h_bins, s_bins, v_bins };
+// bool opnmsp::AFind::isColorInRange(Mat img, struct color)
+// {
+//     Mat img_hsv, histogram;
+//     cvtColor( img, img_hsv, COLOR_BGR2HSV);
+//     int h_bins = 256; 
+//     int s_bins = 180;
+//     int v_bins = 256;
+//     int histSize[] = { h_bins, s_bins, v_bins };
 
-    float h_ranges[] = { 0, 180 };
-    float s_ranges[] = { 0, 256 };
-    float v_ranges[] = { 0, 256 };
+//     float h_ranges[] = { 0, 180 };
+//     float s_ranges[] = { 0, 256 };
+//     float v_ranges[] = { 0, 256 };
 
-    const float* ranges[] = { h_ranges, s_ranges, v_ranges };
-    int channels[] = { 0, 1, 2};
-    calcHist( &img_hsv, 1, channels, Mat(), histogram, 3, histSize, ranges, true, false );
-}
+//     const float* ranges[] = { h_ranges, s_ranges, v_ranges };
+//     int channels[] = { 0, 1, 2};
+//     calcHist( &img_hsv, 1, channels, Mat(), histogram, 3, histSize, ranges, true, false );
+// }

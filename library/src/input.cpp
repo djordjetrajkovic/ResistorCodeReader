@@ -95,8 +95,8 @@ void panmsp::DisplayResult::execute()
 
 void panmsp::Starter::start()
 {
-    string imagepath = "samples/images/image5.jpg";
-    string backgroundpath = "samples/backgrounds/background5.jpg";
+    string imagepath = "samples/images/image4.jpg";
+    string backgroundpath = "samples/backgrounds/background4.jpg";
     string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
     string resistorbinarypattern = "samples/templates/binary/template.jpg";
 
