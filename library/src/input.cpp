@@ -9,7 +9,7 @@ using namespace std;
 #include "opencv2/highgui.hpp"
 using namespace cv;
 
-#include "input.h"
+#include <input.h>
 
 panmsp::ACommand::~ACommand(){}
 
@@ -93,10 +93,8 @@ void panmsp::DisplayResult::execute()
     show();
 }
 
-void panmsp::Starter::start()
+void panmsp::SingleImage::start()
 {
-    string imagepath = "samples/images/image4.jpg";
-    string backgroundpath = "samples/backgrounds/background4.jpg";
     string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
     string resistorbinarypattern = "samples/templates/binary/template.jpg";
 
@@ -124,6 +122,13 @@ void panmsp::Starter::execute()
 {
     start();
 }
+
+void panmsp::Starter::start()
+{
+
+}
+
+panmsp::Starter::~Starter() {}
 
 void panmsp::Composite::execute()
 {

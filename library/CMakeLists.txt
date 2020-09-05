@@ -67,6 +67,7 @@ target_sources( begin
 )
 target_include_directories( begin PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 target_link_libraries( begin PUBLIC test)
+target_link_libraries( begin PUBLIC input)
 
 # Create ALIAS targets.
 add_library( MyOpenCV::test    ALIAS test   )

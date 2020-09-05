@@ -94,12 +94,25 @@ namespace panmsp
     class Starter: public ACommand
     {
         private:
-        void start();
+        virtual void start();
 
         public:
-        Starter() {}
+        Starter() = default;
         Starter(const Starter&) = delete;
         void execute() override;
+        virtual ~Starter() = 0;
+    };
+
+    class SingleImage: public Starter
+    {
+        private:
+        string imagepath, backgroundpath;
+        void start() override;
+
+        public:
+        SingleImage(string ipath, string bpath): imagepath(ipath), backgroundpath(bpath) {}
+        SingleImage(const SingleImage&) = delete;
+        ~SingleImage(){}
     };
 
     class Composite: public ACommand

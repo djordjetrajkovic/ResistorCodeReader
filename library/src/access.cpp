@@ -228,7 +228,7 @@ void opnmsp::FindByTemplate::findObjects()
 
 Mat opnmsp::FindByTemplate::segment()
 {
-    bool show = true;
+    bool show = false;
     if (show) { namedWindow("Original Image"); imshow("Original Image", image); }
     // convert to grayscale
     Mat image_grayscale, bckg_grayscale;
@@ -345,7 +345,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 700 )
+            if (dis < 2700 )
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
