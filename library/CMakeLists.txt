@@ -58,8 +58,18 @@ target_link_libraries( input PUBLIC opencv_core    )
 target_link_libraries( input PUBLIC objects        )
 target_link_libraries( input PUBLIC test           )
 
+# An input library
+add_library( begin SHARED )
+
+target_sources( begin
+    PRIVATE "src/begin.cpp"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/begin.h"
+)
+target_include_directories( begin PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+target_link_libraries( begin PUBLIC test)
 
 # Create ALIAS targets.
-add_library( MyOpenCV::test   ALIAS test )
-add_library( MyOpenCV::input   ALIAS input )
+add_library( MyOpenCV::test    ALIAS test   )
+add_library( MyOpenCV::input   ALIAS input  )
 add_library( MyOpenCV::objects ALIAS objects)
+add_library( MyOpenCV::begin   ALIAS begin  )
