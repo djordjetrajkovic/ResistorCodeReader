@@ -2,7 +2,7 @@
 #define _begin_h_
 
 #include <input.h>
-
+#include <exception>
 namespace rtnmsp
 {
     class Begin

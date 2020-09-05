@@ -20,7 +20,9 @@ void rtnmsp::Begin::findObjectsFile(string imagepath, string backgroundpath)
 
 void rtnmsp::Begin::findObjectsFolder(string folderpath, string backgroundpath)
 {
-
+    panmsp::ACommand *starter = new panmsp::MultipleImages(folderpath, backgroundpath);
+    starter->execute();
+    delete starter;
 }
 
 void rtnmsp::Begin::findObjectsCamera(string videopath, string backgroundpath, int framerate)

@@ -50,6 +50,21 @@ namespace panmsp
         void execute() override;
     };
 
+    class Folder: public ALoadImage
+    {
+        private:
+        Rect roi;
+        Mat fullimage;
+        void openBckgFile();
+        string backgroundgpath;
+        opnmsp::AFind* operation;
+        
+        public:
+        Folder(opnmsp::AFind* op, Rect ri, Mat img, string bpath): operation(op), roi(ri), fullimage(img), backgroundgpath(bpath) {}
+        ~Folder() override {}
+        void execute() override;
+    };
+
     class LoadSamples: public ACommand
     {
         private:
@@ -113,6 +128,18 @@ namespace panmsp
         SingleImage(string ipath, string bpath): imagepath(ipath), backgroundpath(bpath) {}
         SingleImage(const SingleImage&) = delete;
         ~SingleImage(){}
+    };
+
+    class MultipleImages: public Starter
+    {
+        private:
+        string folderpath, backgroundpath;
+        void start() override;
+
+        public:
+        MultipleImages(string fpath, string bpath): folderpath(fpath), backgroundpath(bpath) {}
+        MultipleImages(const MultipleImages&) = delete;
+        ~MultipleImages() {}
     };
 
     class Composite: public ACommand
