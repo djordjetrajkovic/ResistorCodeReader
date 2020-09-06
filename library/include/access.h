@@ -3,8 +3,13 @@
 
 #include "opencv2/core/utility.hpp"
 #include <string>
+#include <utility.h>
 
 #include <object.h>
+#include "opencv2/imgproc.hpp"
+#include "opencv2/highgui.hpp"
+#include <opencv2/shape/shape_distance.hpp>
+using namespace cv;
 
 namespace opnmsp
 {
@@ -38,7 +43,7 @@ namespace opnmsp
         Mat segment();
         vector<vector<Point>>* searchByTemplate(Mat, objectsnmsp::AObject*);
         void searchByContour(Mat&, Mat, objectsnmsp::AObject*, Rect);
-        RotatedRect findRotRect(Mat);
+        
         vector<Point> sampleContour(vector<Point>, int);
         bool isColorInRange(Mat, Scalar);
     };

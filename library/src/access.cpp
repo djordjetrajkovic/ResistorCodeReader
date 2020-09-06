@@ -3,15 +3,9 @@
 #include <sstream>
 #include <math.h>
 #include <ostream>
-#include "access.h"
+#include <access.h>
 using namespace std;
 
-// OpenCV includes
-#include "opencv2/core/utility.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include <opencv2/shape/shape_distance.hpp>
-using namespace cv;
 
 // Mat test(string slika)
 // {
@@ -345,7 +339,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 2700 )
+            if (dis < 2700 && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) )
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
@@ -381,50 +375,9 @@ vector<Point> opnmsp::FindByTemplate::sampleContour(vector<Point> contour, int n
     return sampled;
 }
 
-RotatedRect opnmsp::FindByTemplate::findRotRect(Mat sample)
-{
-    vector<vector<Point>> contours;
-    findContours(sample, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
-    RotatedRect r;
-    for(int i = 0; i < contours.size(); ++i)
-    {
-        Mat obrazac(sample.rows, sample.cols, sample.depth(),Scalar(255));
-        drawContours(obrazac, contours, i, Scalar(125));
-        stringstream ime; ime << "sample " << rand(); 
-        r = fitEllipse(contours[i]);
-
-        Point2f vertices[4];
-        r.points(vertices);
-        for (int i = 0; i < 4; i++) line(obrazac, vertices[i], vertices[(i+1)%4], Scalar(0), 1);
-        Rect brect = r.boundingRect();
-        rectangle(obrazac, brect, Scalar(180), 1);
-
-        namedWindow(ime.str(),WINDOW_NORMAL);
-        imshow(ime.str(), obrazac);
-    }
-    return r;
-}
-
 opnmsp::AFind::~AFind()
 {
     for(auto object: objects) delete object;
     for(auto sample: samples) delete sample;
 }
 
-// bool opnmsp::AFind::isColorInRange(Mat img, struct color)
-// {
-//     Mat img_hsv, histogram;
-//     cvtColor( img, img_hsv, COLOR_BGR2HSV);
-//     int h_bins = 256; 
-//     int s_bins = 180;
-//     int v_bins = 256;
-//     int histSize[] = { h_bins, s_bins, v_bins };
-
-//     float h_ranges[] = { 0, 180 };
-//     float s_ranges[] = { 0, 256 };
-//     float v_ranges[] = { 0, 256 };
-
-//     const float* ranges[] = { h_ranges, s_ranges, v_ranges };
-//     int channels[] = { 0, 1, 2};
-//     calcHist( &img_hsv, 1, channels, Mat(), histogram, 3, histSize, ranges, true, false );
-// }

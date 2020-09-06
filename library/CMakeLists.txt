@@ -31,7 +31,9 @@ add_library( test SHARED )
 
 target_sources( test 
     PRIVATE "src/access.cpp"
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/access.h"        
+    PRIVATE "src/utility.cpp"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/access.h"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/utility.h"        
 )
 target_include_directories( test PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
