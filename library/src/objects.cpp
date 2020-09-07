@@ -48,6 +48,27 @@ objectsnmsp::Electronics::~Electronics()
     
 }
 
+void objectsnmsp::Resistor::recognize()
+{
+    // Rotira i kropuje 
+    RotatedRect rr = object->getRotRect();
+    float angle = rr.angle;
+    Size rect_size = rr.size;
+    if (rr.angle > -45.) 
+    {
+        angle += 90.0;
+        swap(rect_size.width, rect_size.height);
+    }
+    Mat rotMatrix = getRotationMatrix2D(rr.center, angle, 1.0);
+    Mat imageAffine, cropped;
+    warpAffine(image, imageAffine, rotMatrix, image.size(), INTER_CUBIC);
+    getRectSubPix(imageAffine, rect_size, rr.center, cropped);
+
+    // Pronalazi boje
+    
+
+}
+
 void objectsnmsp::Resistor::getDescription(ostream& out)
 {
     out << "Resistor value by colors";

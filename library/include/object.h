@@ -20,6 +20,7 @@ namespace objectsnmsp
         void copy(const AObject&);
         void mov(AObject&);
         void del();
+        
     protected:
         Mat image;
         Mat imagepatterngrayscale;
@@ -41,7 +42,7 @@ namespace objectsnmsp
         {
             mov(obj);
         }
-
+        virtual void recognize() = 0;
         // polimorfno kopiranje objekata
         virtual AObject* clone() const& = 0;
         virtual AObject* clone() && = 0;
@@ -122,7 +123,7 @@ namespace objectsnmsp
         Unknown(Unknown&& unknwn): AObject(unknwn){}
 
         ~Unknown() {}
-
+        virtual void recognize() {}
         Unknown* clone() const& override
         {
             return new Unknown(*this);
@@ -140,14 +141,15 @@ namespace objectsnmsp
     {
         public:
         Electronics() = default;
-        Electronics(const Electronics& electronics): AObject(electronics){}
-        Electronics(Electronics&& electronics): AObject(electronics){}
+        Electronics(const Electronics& electronics): AObject(electronics) {}
+        Electronics(Electronics&& electronics): AObject(electronics) {}
         virtual ~Electronics() = 0;
         virtual Electronics* clone() const& = 0;
         virtual Electronics* clone() && = 0;
         const string getCategory() const = 0;
         virtual const string getType() const = 0;
-        virtual void getDescription(ostream&) = 0;        
+        virtual void getDescription(ostream&) = 0;  
+        virtual void recognize() = 0;      
     };
 
     class Resistor: public Electronics
@@ -161,7 +163,7 @@ namespace objectsnmsp
         Scalar rfive;
         void copy(const Resistor&);
         void mov(Resistor&);
-
+        
         public:
         Resistor() = default;
         Resistor (const Resistor& resistor);
@@ -178,6 +180,7 @@ namespace objectsnmsp
         const string getCategory() const override { return "Electronics"; }
         const string getType() const override { return "Resistor"; }
         void getDescription(ostream& out) override;
+        void recognize() override;
     };
 }
 

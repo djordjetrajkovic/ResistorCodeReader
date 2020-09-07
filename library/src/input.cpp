@@ -85,7 +85,7 @@ void panmsp::DisplayResult::show()
     for (auto object: operation->getObjects()) 
     {
         Mat image = (object -> getImage()).clone();
-        int broj = (int)(rand() % 100);
+        int broj = (int)(rand() % 10000);
         stringstream ss; ss << broj ;
         
         
@@ -95,10 +95,27 @@ void panmsp::DisplayResult::show()
         //Rect brect = object->getRotRect().boundingRect();
         //rectangle(image, brect, Scalar(0,0,255), 1);
         
-        //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
+        namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
         
         
         if (object != nullptr) cout << *object << endl;
+
+        /// PROBA
+        // RotatedRect rr = object->getRotRect();
+        // float angle = rr.angle;
+        // Size rect_size = rr.size;
+        // if (rr.angle > -45.) {
+        //     angle += 90.0;
+        //     swap(rect_size.width, rect_size.height);
+        // }
+        // Mat rotMatrix = getRotationMatrix2D(rr.center, angle, 1.0);
+        // Mat imageAffine, cropped;
+        // warpAffine(image, imageAffine, rotMatrix, image.size(), INTER_CUBIC);
+        // getRectSubPix(imageAffine, rect_size, rr.center, cropped);
+        // cout << "Angle: " << rr.angle << endl;
+        // ss << "_affine";
+        // namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), cropped);
+        ////
     }
 }
 
