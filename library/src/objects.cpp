@@ -51,7 +51,7 @@ objectsnmsp::Electronics::~Electronics()
 void objectsnmsp::Resistor::recognize()
 {
     // Rotira i kropuje 
-    RotatedRect rr = object->getRotRect();
+    RotatedRect rr = getRotRect();
     float angle = rr.angle;
     Size rect_size = rr.size;
     if (rr.angle > -45.) 
@@ -65,13 +65,61 @@ void objectsnmsp::Resistor::recognize()
     getRectSubPix(imageAffine, rect_size, rr.center, cropped);
 
     // Pronalazi boje
-    
-
+    vector<opnmsp::Color*> RColors = 
+    { 
+        new opnmsp::ROrange,
+        new opnmsp::RRed,
+        new opnmsp::RBrown,
+        new opnmsp::RGold
+    };
+    opnmsp::Color *RBColor = new opnmsp::RBackground;
+    list<opnmsp::Color*> detectedColors;
+    int i = 0;
+    while ( ++i < image.cols )
+    {
+        Rect roi(i, 0, 1, image.rows);
+        Mat section(image(roi));
+        vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
+        if ( pColors.size() == 1)
+        {
+            detectedColors.push_back(pColors.at(0));
+            continue;
+        }
+        if ( pColors.size() > 1)
+        {
+            continue;
+        }
+        if( opnmsp::Utility::isColorPresent(RBColor, section))
+        {
+            detectedColors.push_back(RBColor);
+        }
+    }
+    detectedColors.unique();
+    // prepisivanje u ringcolors
+    list<opnmsp::Color*>::iterator it = detectedColors.begin(); 
+    list<opnmsp::Color*>::iterator end = detectedColors.end();
+    while (it != end)
+    {
+        if ( (*(*it)) != *RBColor ) ringcolors.push_back(*it);
+        it++;
+    }
 }
 
 void objectsnmsp::Resistor::getDescription(ostream& out)
 {
-    out << "Resistor value by colors";
+    int numofrings = ringcolors.size();
+    if (numofrings == 0) { out << "No rings detected."; return; }
+    // out << "Num. of Rings: " << numofrings;
+    // list<opnmsp::Color*>::iterator it = ringcolors.begin(); 
+    // list<opnmsp::Color*>::iterator end = ringcolors.end();
+    // while (it != -- --end)
+    // {
+    //    out << (*(*it)).value();
+    //    it++;
+    // }
+    // out << (*(*(--it))).multiplier();
+    // out << " T:";
+    // out << (*(*(it))).tolerance();
 }
 
 objectsnmsp::Resistor::Resistor(const Resistor& resistor):Electronics(resistor)
@@ -86,20 +134,10 @@ objectsnmsp::Resistor::Resistor(Resistor&& resistor):Electronics(resistor)
 
 void objectsnmsp::Resistor::copy(const Resistor& resistor)
 {
-    resistorColor = resistor.resistorColor;
-    rone = resistor.rone;
-    rtwo = resistor.rtwo;
-    rthree = resistor.rthree;
-    rfour = resistor.rfour;
-    rfive = resistor.rfive;
+ // Dovrsi
 }
 
 void objectsnmsp::Resistor::mov(Resistor& resistor)
 {
-    resistorColor = resistor.resistorColor;
-    rone = resistor.rone;
-    rtwo = resistor.rtwo;
-    rthree = resistor.rthree;
-    rfour = resistor.rfour;
-    rfive = resistor.rfive;
+ // Dovrsi
 }
