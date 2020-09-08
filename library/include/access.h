@@ -1,11 +1,52 @@
+#ifndef _access_h_
+#define _access_h_
+
 #include "opencv2/core/utility.hpp"
 #include <string>
-namespace access
+#include <utility.h>
+
+#include <object.h>
+#include "opencv2/imgproc.hpp"
+#include "opencv2/highgui.hpp"
+#include <opencv2/shape/shape_distance.hpp>
+using namespace cv;
+
+namespace opnmsp
 {
-    void locationAt(std::string);
-    void locationPtr(std::string);
-    void iterator(std::string);
-    void iterator2();
-    void naryiterator(std::string);
-    void naryiterator();
+    class AFind
+    {
+        protected:
+        Mat image;
+        Mat background;
+        vector<objectsnmsp::AObject*> objects;
+        vector<objectsnmsp::AObject*> samples;
+        
+        public:
+        void setImage(Mat img) { image = img; }
+        Mat getImage() { return image; }
+        void setBackground(Mat bckg) { background = bckg; }
+        Mat getBackground() { return background; }
+        vector<objectsnmsp::AObject*> getObjects() { return objects; }
+        void setObjects(vector<objectsnmsp::AObject*> objs) { objects = objs; }
+        void setSamples(vector<objectsnmsp::AObject*> smpls) { samples = smpls; }
+        virtual void findObjects() = 0;
+        virtual ~AFind() = 0;
+    };
+
+    class FindByTemplate : public AFind
+    {
+        public:
+        void findObjects() override;
+        ~FindByTemplate() override {}
+
+        private:
+        Mat segment();
+        vector<vector<Point>>* searchByTemplate(Mat, objectsnmsp::AObject*);
+        void searchByContour(Mat&, Mat, objectsnmsp::AObject*, Rect);
+        
+        vector<Point> sampleContour(vector<Point>, int);
+        bool isColorInRange(Mat, Scalar);
+    };
 }
+
+#endif
