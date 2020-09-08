@@ -2,6 +2,8 @@
 #define _object_h_
 
 #include <iostream>
+#include <deque>
+#include <list>
 #include <vector>
 #include <utility>
 #include <ostream>
@@ -12,6 +14,8 @@ using namespace std;
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 using namespace cv;
+
+#include <utility.h>
 
 namespace objectsnmsp
 {
@@ -155,12 +159,7 @@ namespace objectsnmsp
     class Resistor: public Electronics
     {
         private:
-        Scalar resistorColor;
-        Scalar rone;
-        Scalar rtwo;
-        Scalar rthree;
-        Scalar rfour;
-        Scalar rfive;
+        deque<opnmsp::Color*>ringcolors;
         void copy(const Resistor&);
         void mov(Resistor&);
         

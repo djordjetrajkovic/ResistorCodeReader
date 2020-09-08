@@ -347,7 +347,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
                 newobject->setRoi(rect);
                 newobject->setConture(cc);
                 newobject->setRotRect(rr);
-                newobject->recognize();
+                //newobject->recognize();
                 objects.push_back(newobject);
             }
         }

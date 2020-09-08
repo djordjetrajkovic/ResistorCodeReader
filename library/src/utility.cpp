@@ -23,19 +23,29 @@ Mat opnmsp::Utility::hsvHistogram(Mat image)
 bool opnmsp::Utility::isColorPresent(Color* color, Mat image)
 {
     ///////////////////
-    int broj = (int)(rand() % 10000);
-    std::stringstream ss; ss << broj ;
+    //int broj = (int)(rand() % 10000);
+    //std::stringstream ss; ss << broj ;
     
     ///////////////////
 
     Mat imgThreshold, image_hsv;
     cvtColor(image, image_hsv, COLOR_BGR2HSV);
     inRange(image_hsv, color->getDownColor(), color->getUpColor(), imgThreshold);
-    namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), imgThreshold);
+    //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), imgThreshold);
     
     Scalar suma = sum(imgThreshold);
     if ( suma[0] > 0) return true;
     return false;
+}
+
+vector<opnmsp::Color*> opnmsp::Utility::presentColors(vector<opnmsp::Color*> colors, Mat image)
+{
+    vector<opnmsp::Color*> presentcols;
+    for (auto color: colors)
+    {
+        if ( opnmsp::Utility::isColorPresent(color, image)) presentcols.push_back(color);
+    }
+    return presentcols;
 }
 
 RotatedRect opnmsp::Utility::findRotRect(Mat sample)
