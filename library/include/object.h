@@ -2,7 +2,10 @@
 #define _object_h_
 
 #include <iostream>
+<<<<<<< HEAD
 #include <deque>
+=======
+>>>>>>> 65fc6e2450ea930a3cb9b2fc942c39f12bdc8366
 #include <list>
 #include <vector>
 #include <utility>
