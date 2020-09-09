@@ -116,7 +116,7 @@ namespace objectsnmsp
         virtual const string getType() const = 0;
         virtual void getDescription(ostream&) = 0;
 
-        friend ostream & operator << (ostream &out, AObject &aobject) { aobject.getDescription(out); }
+        friend ostream & operator << (ostream &out, AObject &aobject) { aobject.getDescription(out); return out;}
     };
 
     class Unknown: public AObject 
