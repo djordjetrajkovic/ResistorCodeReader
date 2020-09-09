@@ -80,6 +80,9 @@ void panmsp::FindObjects::execute()
     find();
 }
 
+//////////////////////////////////////////////////////
+// DisplayResult
+//////////////////////////////////////////////////////
 void panmsp::DisplayResult::show()
 {
     auto objects = operation->getObjects();
@@ -95,12 +98,12 @@ void panmsp::DisplayResult::show()
 
         int broj = (int)(rand() % 10000);
         stringstream ss; ss << broj ;
-        namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
+        //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
         
         
         if (object != nullptr) 
         {
-            cout << object->getType() << ": " << *object << endl;
+            cout << object->getCategory() << ":" <<object->getType() << "-" << *object << endl;
         }
     }
 }
@@ -122,12 +125,14 @@ void panmsp::SingleImage::start()
     panmsp::ACommand *loadsamples = new panmsp::LoadSamples(operation, resistorgrayscalepattern, resistorbinarypattern);
     panmsp::ACommand *findobjects = new panmsp::FindObjects(operation);
     panmsp::ACommand *displayresults = new panmsp::DisplayResult(operation);
+    panmsp::ACommand *displayimage = new panmsp::DisplayImage(operation);
 
     panmsp::Composite *composite = new panmsp::Composite();
     composite -> add(fromfile);
     composite -> add(loadsamples);
     composite -> add(findobjects);
     composite -> add(displayresults);
+    composite -> add(displayimage);
 
     // start from here
     composite -> execute();
@@ -158,12 +163,14 @@ void panmsp::MultipleImages::start()
         panmsp::ACommand *loadsamples = new panmsp::LoadSamples(operation, resistorgrayscalepattern, resistorbinarypattern);
         panmsp::ACommand *findobjects = new panmsp::FindObjects(operation);
         panmsp::ACommand *displayresults = new panmsp::DisplayResult(operation);
+        panmsp::ACommand *displayimage = new panmsp::DisplayImage(operation);
 
         composite = new panmsp::Composite();
         composite -> add(fromfolder);
         composite -> add(loadsamples);
         composite -> add(findobjects);
         composite -> add(displayresults);
+        composite -> add(displayimage);
     }
         // start from here
         composite -> execute();
@@ -193,4 +200,28 @@ void panmsp::Composite::execute()
 panmsp::Composite::~Composite()
 {
     for (auto& operation: operations) delete operation;
+}
+
+//////////////////////////////////////////////////////
+// DisplayImage
+//////////////////////////////////////////////////////
+void panmsp::DisplayImage::execute()
+{
+    show();
+}
+
+void panmsp::DisplayImage::show()
+{
+    auto objects = operation->getObjects();
+    Mat img = operation->getImage();
+    for (auto object: objects) 
+    {   
+        stringstream text;
+        Rect rec = object->getRoi();
+        rectangle(img, rec, Scalar(0,0,255), 1);
+        text << *object;
+        putText(img, text.str(), Point2d(rec.x, rec.y),FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
+
+    }
+    namedWindow("Recognized_objects", WINDOW_NORMAL); imshow("Recognized_objects", img);
 }
