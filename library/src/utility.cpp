@@ -22,16 +22,9 @@ Mat opnmsp::Utility::hsvHistogram(Mat image)
 
 bool opnmsp::Utility::isColorPresent(Color* color, Mat image)
 {
-    ///////////////////
-    //int broj = (int)(rand() % 10000);
-    //std::stringstream ss; ss << broj ;
-    
-    ///////////////////
-
     Mat imgThreshold, image_hsv;
     cvtColor(image, image_hsv, COLOR_BGR2HSV);
     inRange(image_hsv, color->getDownColor(), color->getUpColor(), imgThreshold);
-    //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), imgThreshold);
     
     Scalar suma = sum(imgThreshold);
     if ( suma[0] > 0) return true;
