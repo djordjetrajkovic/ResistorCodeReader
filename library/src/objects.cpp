@@ -75,10 +75,10 @@ void objectsnmsp::Resistor::recognize()
     opnmsp::Color *RBColor = new opnmsp::RBackground;
     list<opnmsp::Color*> detectedColors;
     int i = 0;
-    while ( ++i < image.cols )
+    while ( ++i < cropped.cols )
     {
-        Rect roi(i, 0, 1, image.rows);
-        Mat section(image(roi));
+        Rect roi(i, 0, 1, cropped.rows);
+        Mat section(cropped(roi));
         vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
         if ( pColors.size() == 1)
         {
@@ -103,25 +103,61 @@ void objectsnmsp::Resistor::recognize()
         if ( (*(*it)) != *RBColor ) ringcolors.push_back(*it);
         it++;
     }
-    // izzvrni ako je tolerancija prva
-    
+    // izvrni ako je tolerancija prva
+    opnmsp::Color *RGold = new opnmsp::RGold;
+    if ( *ringcolors.at(0) == *RGold )
+    {
+        deque<opnmsp::Color*> ringcolors_copy(ringcolors);
+        deque<opnmsp::Color*>::reverse_iterator rit = ringcolors_copy.rbegin(); 
+        deque<opnmsp::Color*>::reverse_iterator rend = ringcolors_copy.rend();
+        ringcolors.clear();
+        while ( rit != rend)
+        {
+            ringcolors.push_back(*rit);
+            rit++;
+        }
+    } 
 }
 
 void objectsnmsp::Resistor::getDescription(ostream& out)
 {
     int numofrings = ringcolors.size();
+    //out << "Num. of Rings: " << numofrings;
     if (numofrings == 0) { out << "No rings detected."; return; }
-    // out << "Num. of Rings: " << numofrings;
-    // list<opnmsp::Color*>::iterator it = ringcolors.begin(); 
-    // list<opnmsp::Color*>::iterator end = ringcolors.end();
-    // while (it != -- --end)
-    // {
-    //    out << (*(*it)).value();
-    //    it++;
-    // }
-    // out << (*(*(--it))).multiplier();
-    // out << " T:";
-    // out << (*(*(it))).tolerance();
+    switch (numofrings)
+    {
+        case 3:
+            out << "(3B)";
+            for (int i = 0; i < numofrings - 1; i++ )
+            {
+                out << ringcolors.at(i)->value();
+            }
+            out << ringcolors.at(numofrings - 1)->multiplier();
+            break;
+        case 4:
+            out << "(4B)";
+            for (int i = 0; i < numofrings - 2; i++ )
+            {
+                out << ringcolors.at(i)->value();
+            }
+            out << ringcolors.at(numofrings - 2)->multiplier();
+            out << " T:";
+            out << ringcolors.at(numofrings - 1)->tolerance();
+            break;
+        case 5:
+            out << "(5B)";
+            for (int i = 0; i < numofrings - 2; i++ )
+            {
+                out << ringcolors.at(i)->value();
+            }
+            out << ringcolors.at(numofrings - 2)->multiplier();
+            out << " T:";
+            out << ringcolors.at(numofrings - 1)->tolerance();
+            break;
+        default:
+            out << "No colors detected." << endl;
+            break;
+    }
 }
 
 objectsnmsp::Resistor::Resistor(const Resistor& resistor):Electronics(resistor)

@@ -339,7 +339,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 2700 ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
+            if (dis < 2700  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
@@ -347,7 +347,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
                 newobject->setRoi(rect);
                 newobject->setConture(cc);
                 newobject->setRotRect(rr);
-                //newobject->recognize();
+                newobject->recognize();
                 objects.push_back(newobject);
             }
         }
