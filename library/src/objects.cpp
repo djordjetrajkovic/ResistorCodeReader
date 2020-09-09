@@ -141,7 +141,7 @@ void objectsnmsp::Resistor::getDescription(ostream& out)
                 out << ringcolors.at(i)->value();
             }
             out << ringcolors.at(numofrings - 2)->multiplier();
-            out << " T:";
+            out << " To:";
             out << ringcolors.at(numofrings - 1)->tolerance();
             break;
         case 5:
@@ -151,7 +151,7 @@ void objectsnmsp::Resistor::getDescription(ostream& out)
                 out << ringcolors.at(i)->value();
             }
             out << ringcolors.at(numofrings - 2)->multiplier();
-            out << " T:";
+            out << " To:";
             out << ringcolors.at(numofrings - 1)->tolerance();
             break;
         default:

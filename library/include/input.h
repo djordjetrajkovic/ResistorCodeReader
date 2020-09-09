@@ -3,6 +3,7 @@
 
 // STD Libs includes
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <deque>
 using namespace std;
@@ -104,6 +105,19 @@ namespace panmsp
         DisplayResult(const DisplayResult&) = delete;
         ~DisplayResult() override { }
         void execute() override;
+    };
+
+    class DisplayImage: public ACommand
+    {
+        private:
+        opnmsp::AFind* operation;
+        void show();
+
+        public:
+        DisplayImage(opnmsp::AFind* op): operation(op) {}
+        DisplayImage(const DisplayResult&) = delete;
+        ~DisplayImage() override { }
+        void execute() override;       
     };
 
     class Starter: public ACommand
