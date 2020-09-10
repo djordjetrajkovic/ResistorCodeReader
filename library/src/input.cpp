@@ -90,7 +90,7 @@ void panmsp::DisplayResult::show()
     {
         if (object != nullptr) 
         {
-            cout << object->getCategory() << ":" <<object->getType() << "-" << *object << endl;
+            cout << "(ID:" << object->getID() << ")" <<object->getCategory() << ":" <<object->getType() << ":" << *object << endl;
         }
     }
 }
@@ -205,12 +205,13 @@ void panmsp::DisplayImage::show()
     Mat img = (operation->getImage()).clone();
     for (auto object: objects) 
     {   
-        stringstream text;
+        stringstream text, id;
         Rect rec = object->getRoi();
         rectangle(img, rec, Scalar(0,0,255), 1);
         text << *object;
-        putText(img, text.str(), Point2d(rec.x, rec.y),FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
-
+        putText(img, text.str(), Point2d(rec.x, rec.y), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
+        id << object -> getID();
+        putText(img, id.str(), Point2d(rec.x + rec.width, rec.y + rec.height), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,0));
     }
     namedWindow("Recognized_objects", WINDOW_NORMAL); imshow("Recognized_objects", img);
 }
@@ -232,8 +233,7 @@ void panmsp::DisplayObjects::show()
         Point2f vertices[4];
         object->getRotRect().points(vertices);
         for (int i = 0; i < 4; i++) line(singleobject, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
-        int broj = (int)(rand() % 10000);
-        stringstream ss; ss << broj ;
+        stringstream ss; ss << "ID_" << object -> getID() ;
         namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), singleobject);
     }
 }
