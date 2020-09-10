@@ -172,6 +172,7 @@ namespace objectsnmsp
     class Resistor: public Electronics
     {
         private:
+        list<opnmsp::Color*>detectedColors;
         deque<opnmsp::Color*>ringcolors;
         void copy(const Resistor&);
         void mov(Resistor&);

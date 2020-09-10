@@ -75,7 +75,6 @@ void objectsnmsp::Resistor::recognize()
         new opnmsp::RGold
     };
     opnmsp::Color *RBColor = new opnmsp::RBackground;
-    list<opnmsp::Color*> detectedColors;
     int i = 0;
     while ( ++i < cropped.cols )
     {
@@ -194,7 +193,8 @@ objectsnmsp::Resistor::~Resistor()
 {
     for (auto& ringcolor: ringcolors)
     {
-        delete ringcolor;
+       // delete ringcolor;
     }
     ringcolors.clear();
+    detectedColors.clear();
 }
