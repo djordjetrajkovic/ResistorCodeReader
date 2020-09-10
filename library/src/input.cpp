@@ -88,22 +88,9 @@ void panmsp::DisplayResult::show()
     auto objects = operation->getObjects();
     for (auto object: objects) 
     {
-        Mat image = (object -> getImage()).clone();
-        Point2f vertices[4];
-        object->getRotRect().points(vertices);
-        for (int i = 0; i < 4; i++) line(image, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
-        //Rect brect = object->getRotRect().boundingRect();
-        //rectangle(image, brect, Scalar(0,0,255), 1);
-
-
-        int broj = (int)(rand() % 10000);
-        stringstream ss; ss << broj ;
-        //namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), image);
-        
-        
         if (object != nullptr) 
         {
-            cout << object->getCategory() << ":" <<object->getType() << "-" << *object << endl;
+            cout << "(ID:" << object->getID() << ")" <<object->getCategory() << ":" <<object->getType() << ":" << *object << endl;
         }
     }
 }
@@ -126,12 +113,14 @@ void panmsp::SingleImage::start()
     panmsp::ACommand *findobjects = new panmsp::FindObjects(operation);
     panmsp::ACommand *displayresults = new panmsp::DisplayResult(operation);
     panmsp::ACommand *displayimage = new panmsp::DisplayImage(operation);
+    panmsp::ACommand *displayobjects = new panmsp::DisplayObjects(operation);
 
     panmsp::Composite *composite = new panmsp::Composite();
     composite -> add(fromfile);
     composite -> add(loadsamples);
     composite -> add(findobjects);
     composite -> add(displayresults);
+    composite -> add(displayobjects);
     composite -> add(displayimage);
 
     // start from here
@@ -213,15 +202,38 @@ void panmsp::DisplayImage::execute()
 void panmsp::DisplayImage::show()
 {
     auto objects = operation->getObjects();
-    Mat img = operation->getImage();
+    Mat img = (operation->getImage()).clone();
     for (auto object: objects) 
     {   
-        stringstream text;
+        stringstream text, id;
         Rect rec = object->getRoi();
         rectangle(img, rec, Scalar(0,0,255), 1);
         text << *object;
-        putText(img, text.str(), Point2d(rec.x, rec.y),FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
-
+        putText(img, text.str(), Point2d(rec.x, rec.y), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
+        id << object -> getID();
+        putText(img, id.str(), Point2d(rec.x + rec.width, rec.y + rec.height), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,0));
     }
     namedWindow("Recognized_objects", WINDOW_NORMAL); imshow("Recognized_objects", img);
+}
+
+//////////////////////////////////////////////////////
+// Display Objects
+//////////////////////////////////////////////////////
+void panmsp::DisplayObjects::execute()
+{
+    show();
+}
+
+void panmsp::DisplayObjects::show()
+{
+    auto objects = operation -> getObjects();
+    for (auto object: objects) 
+    {   
+        Mat singleobject = (object -> getImage()).clone();
+        Point2f vertices[4];
+        object->getRotRect().points(vertices);
+        for (int i = 0; i < 4; i++) line(singleobject, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
+        stringstream ss; ss << "ID_" << object -> getID() ;
+        namedWindow(ss.str(), WINDOW_NORMAL); imshow(ss.str(), singleobject);
+    }
 }

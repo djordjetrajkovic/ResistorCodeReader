@@ -9,6 +9,8 @@ using namespace cv;
 
 #include "object.h"
 
+int objectsnmsp::AObject::oID = 0;
+
 objectsnmsp::AObject::~AObject()
 {
     del();
@@ -172,10 +174,27 @@ objectsnmsp::Resistor::Resistor(Resistor&& resistor):Electronics(resistor)
 
 void objectsnmsp::Resistor::copy(const Resistor& resistor)
 {
- // Dovrsi
+    id = ++oID;
+    auto it = resistor.ringcolors.begin();
+    auto end = resistor.ringcolors.end();
+    while ( it != end)
+    {
+        ringcolors.push_back(*it);
+        it++;
+    }
 }
 
 void objectsnmsp::Resistor::mov(Resistor& resistor)
 {
- // Dovrsi
+    id = ++oID;
+    ringcolors = resistor.ringcolors;
+}
+
+objectsnmsp::Resistor::~Resistor()
+{
+    for (auto& ringcolor: ringcolors)
+    {
+        delete ringcolor;
+    }
+    ringcolors.clear();
 }
