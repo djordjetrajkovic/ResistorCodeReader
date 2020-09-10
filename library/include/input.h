@@ -115,9 +115,22 @@ namespace panmsp
 
         public:
         DisplayImage(opnmsp::AFind* op): operation(op) {}
-        DisplayImage(const DisplayResult&) = delete;
+        DisplayImage(const DisplayImage&) = delete;
         ~DisplayImage() override { }
         void execute() override;       
+    };
+
+    class DisplayObjects: public ACommand
+    {
+        private:
+        opnmsp::AFind* operation;
+        void show();
+
+        public:
+        DisplayObjects(opnmsp::AFind* op): operation(op) {}
+        DisplayObjects(const DisplayObjects&) = delete;
+        ~DisplayObjects() override { }
+        void execute() override;  
     };
 
     class Starter: public ACommand

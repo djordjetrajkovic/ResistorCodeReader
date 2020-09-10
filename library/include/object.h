@@ -24,7 +24,7 @@ namespace objectsnmsp
         void copy(const AObject&);
         void mov(AObject&);
         void del();
-        
+
     protected:
         Mat image;
         Mat imagepatterngrayscale;
@@ -35,6 +35,8 @@ namespace objectsnmsp
         string name;
         string category;
         string type;
+        static int oID;
+    
     public:
         // konstruktori
         AObject() = default;
@@ -111,16 +113,22 @@ namespace objectsnmsp
             rotrectangle = rrect;
         }
 
+        
+
         // virtual methods
         virtual const string getCategory() const = 0;
         virtual const string getType() const = 0;
         virtual void getDescription(ostream&) = 0;
+        virtual int getID() = 0;
 
         friend ostream & operator << (ostream &out, AObject &aobject) { aobject.getDescription(out); return out;}
     };
 
     class Unknown: public AObject 
     {
+        private:
+        int id;
+
         public:
         Unknown() = default;
         Unknown(const Unknown& unknwn): AObject(unknwn){}
@@ -139,10 +147,14 @@ namespace objectsnmsp
         const string getCategory() const override { return "Unknown"; }
         const string getType() const override { return "Unknown"; }
         void getDescription(ostream& out) override { out << "Unknown"; }
+        int getID() override { return id; }
     };
 
     class Electronics: public AObject
     {
+        private:
+        int id;
+
         public:
         Electronics() = default;
         Electronics(const Electronics& electronics): AObject(electronics) {}
@@ -153,21 +165,24 @@ namespace objectsnmsp
         const string getCategory() const = 0;
         virtual const string getType() const = 0;
         virtual void getDescription(ostream&) = 0;  
-        virtual void recognize() = 0;      
+        virtual void recognize() = 0;
+        virtual int getID() = 0;  
     };
 
     class Resistor: public Electronics
     {
         private:
+        list<opnmsp::Color*>detectedColors;
         deque<opnmsp::Color*>ringcolors;
         void copy(const Resistor&);
         void mov(Resistor&);
-        
+        int id;
+
         public:
         Resistor() = default;
         Resistor (const Resistor& resistor);
         Resistor (Resistor&& resistor);
-        ~Resistor() override {}
+        ~Resistor() override;
         Resistor* clone() const& override
         {
             return new Resistor(*this);
@@ -180,6 +195,7 @@ namespace objectsnmsp
         const string getType() const override { return "Resistor"; }
         void getDescription(ostream& out) override;
         void recognize() override;
+        int getID() override { return id; }
     };
 }
 
