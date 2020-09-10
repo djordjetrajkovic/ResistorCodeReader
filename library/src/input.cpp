@@ -213,7 +213,10 @@ void panmsp::DisplayImage::show()
         id << object -> getID();
         putText(img, id.str(), Point2d(rec.x + rec.width, rec.y + rec.height), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,0));
     }
-    namedWindow("Recognized_objects", WINDOW_NORMAL); imshow("Recognized_objects", img);
+    int id = operation->getID();
+    stringstream ss; ss << "Recognized_objects No." << id;
+    string headline = ss.str(); 
+    namedWindow(headline, WINDOW_NORMAL); imshow(headline, img);
 }
 
 //////////////////////////////////////////////////////

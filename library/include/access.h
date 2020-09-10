@@ -20,6 +20,7 @@ namespace opnmsp
         Mat background;
         vector<objectsnmsp::AObject*> objects;
         vector<objectsnmsp::AObject*> samples;
+        static int uID;
         
         public:
         void setImage(Mat img) { image = img; }
@@ -31,15 +32,19 @@ namespace opnmsp
         void setSamples(vector<objectsnmsp::AObject*> smpls) { samples = smpls; }
         virtual void findObjects() = 0;
         virtual ~AFind() = 0;
+        virtual int getID() = 0;
     };
 
     class FindByTemplate : public AFind
     {
         public:
+        FindByTemplate() { id = ++uID; }
         void findObjects() override;
         ~FindByTemplate() override {}
+        int getID() override { return id; }
 
         private:
+        int id;
         Mat segment();
         vector<vector<Point>>* searchByTemplate(Mat, objectsnmsp::AObject*);
         void searchByContour(Mat&, Mat, objectsnmsp::AObject*, Rect);
