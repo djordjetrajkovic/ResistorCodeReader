@@ -51,6 +51,8 @@ namespace opnmsp
         string value() const override { return "N"; }
         string multiplier() const override { return "N"; }
         string tolerance() const override { return "N"; }
+
+        ~RBackground() { delete up, delete down;}
         private:
         string colorname = "Pozadina";
     };
@@ -66,6 +68,8 @@ namespace opnmsp
         string value() const override { return "3"; }
         string multiplier() const override { return "x1000"; }
         string tolerance() const override { return "+/-3%"; }
+
+        ~ROrange() { delete up, delete down;}
         private:
         string colorname = "Narandzast";
     };
@@ -81,6 +85,8 @@ namespace opnmsp
         string value() const override { return "2"; }
         string multiplier() const override { return "x100"; }
         string tolerance() const override { return "+/-2%"; }
+
+        ~RRed() { delete up, delete down;}
         private:
         string colorname = "Crvena";
     };
@@ -96,6 +102,8 @@ namespace opnmsp
         string value() const override { return "1"; }
         string multiplier() const override { return "x10"; }
         string tolerance() const override { return "+/-1%"; }
+
+        ~RBrown() { delete up, delete down;}
         private:
         string colorname = "Braon";
     };
@@ -111,6 +119,8 @@ namespace opnmsp
         string value() const override { return ""; }
         string multiplier() const override { return "x0.1"; }
         string tolerance() const override { return "+/-5%"; }
+
+        ~RGold() { delete up, delete down;}
         private:
         string colorname = "Zlatna";
     };

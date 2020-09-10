@@ -43,24 +43,24 @@ vector<opnmsp::Color*> opnmsp::Utility::presentColors(vector<opnmsp::Color*> col
 
 RotatedRect opnmsp::Utility::findRotRect(Mat sample)
 {
-    // vector<vector<Point>> contours;
-    // findContours(sample, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
-    // RotatedRect r;
-    // for(int i = 0; i < contours.size(); ++i)
-    // {
-    //     Mat obrazac(sample.rows, sample.cols, sample.depth(),Scalar(255));
-    //     drawContours(obrazac, contours, i, Scalar(125));
-    //     stringstream ime; ime << "sample " << rand(); 
-    //     r = fitEllipse(contours[i]);
+    vector<vector<Point>> contours;
+    findContours(sample, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+    RotatedRect r;
+    for(int i = 0; i < contours.size(); ++i)
+    {
+        Mat obrazac(sample.rows, sample.cols, sample.depth(),Scalar(255));
+        drawContours(obrazac, contours, i, Scalar(125));
+        stringstream ime; ime << "sample " << rand(); 
+        r = fitEllipse(contours[i]);
 
-    //     Point2f vertices[4];
-    //     r.points(vertices);
-    //     for (int i = 0; i < 4; i++) line(obrazac, vertices[i], vertices[(i+1)%4], Scalar(0), 1);
-    //     Rect brect = r.boundingRect();
-    //     rectangle(obrazac, brect, Scalar(180), 1);
+        Point2f vertices[4];
+        r.points(vertices);
+        for (int i = 0; i < 4; i++) line(obrazac, vertices[i], vertices[(i+1)%4], Scalar(0), 1);
+        Rect brect = r.boundingRect();
+        rectangle(obrazac, brect, Scalar(180), 1);
 
-    //     namedWindow(ime.str(),WINDOW_NORMAL);
-    //     imshow(ime.str(), obrazac);
-    // }
-    // return r;
+        namedWindow(ime.str(),WINDOW_NORMAL);
+        imshow(ime.str(), obrazac);
+    }
+    return r;
 }
