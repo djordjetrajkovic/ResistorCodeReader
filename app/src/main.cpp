@@ -6,9 +6,9 @@ using namespace std;
 int main()
 {
     rtnmsp::Begin* begin = rtnmsp::Begin::createBegin();
-    begin->findObjectsFile("samples/images/image4.jpg", "samples/backgrounds/background4.jpg");
-    begin->findObjectsFile("samples/images/image5.jpg", "samples/backgrounds/background5.jpg");
-    begin->findObjectsFile("samples/images/image3.jpg", "samples/backgrounds/background3.jpg");
+    begin->findObjectsFile("samples/images/slika1_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg");
+    //begin->findObjectsFile("samples/images/slika2_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg");
+    //begin->findObjectsFile("samples/images/slika3_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg");
     //begin->findObjectsFolder("samples/images/image%01d.jpg", "samples/backgrounds/background5.jpg");
     cout << "Waiting for q... " << endl;
     char key;

@@ -17,7 +17,8 @@ panmsp::ALoadImage::~ALoadImage(){}
 
 void panmsp::File::openImageFile()
 {
-    Mat image(imread(imagepath), roi);
+   
+    Mat image(imread(imagepath), roi); 
     operation->setImage(image);
 }
 
@@ -105,7 +106,7 @@ void panmsp::SingleImage::start()
     string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
     string resistorbinarypattern = "samples/templates/binary/template.jpg";
 
-    Rect r (300, 300, 900, 1200);
+    Rect r (300, 200, 900, 1200);
 
     opnmsp::AFind    *operation = new opnmsp::FindByTemplate();
     panmsp::ACommand *fromfile = new panmsp::File(operation, r, imagepath, backgroundpath);
@@ -202,21 +203,19 @@ void panmsp::DisplayImage::execute()
 void panmsp::DisplayImage::show()
 {
     auto objects = operation->getObjects();
-    Mat img = (operation->getImage()).clone();
+    Mat singleobject = (operation->getImage()).clone();
     for (auto object: objects) 
     {   
         stringstream text, id;
         Rect rec = object->getRoi();
-        rectangle(img, rec, Scalar(0,0,255), 1);
+        rectangle(singleobject, rec, Scalar(0,0,255), 1);
         text << *object;
-        putText(img, text.str(), Point2d(rec.x, rec.y), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
-        id << object -> getID();
-        putText(img, id.str(), Point2d(rec.x + rec.width, rec.y + rec.height), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,0));
+        putText(singleobject, text.str(), Point2d(rec.x, rec.y), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
     }
     int id = operation->getID();
     stringstream ss; ss << "Recognized_objects No." << id;
     string headline = ss.str(); 
-    namedWindow(headline, WINDOW_NORMAL); imshow(headline, img);
+    namedWindow(headline, WINDOW_NORMAL); imshow(headline, singleobject);
 }
 
 //////////////////////////////////////////////////////

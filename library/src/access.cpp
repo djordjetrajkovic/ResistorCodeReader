@@ -43,7 +43,7 @@ Mat opnmsp::FindByTemplate::segment()
     medianBlur(bckg_grayscale, bck_median, 7);
     if (show) { namedWindow("Median"); imshow("Median", img_median); }
 
-    // Background substruction
+    // Background subst
     Mat img_comp;
     img_comp = bck_median - img_median;
     if (show) { namedWindow("Compensated"); imshow("Compensated", img_comp);}
@@ -147,7 +147,7 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         {
             dis = mysc -> computeDistance(c2, cc);
             cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 2700  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
+            if (dis < 1700  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
