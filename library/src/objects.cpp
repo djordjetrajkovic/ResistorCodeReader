@@ -56,36 +56,24 @@ void objectsnmsp::Resistor::recognize()
     RotatedRect rr = getRotRect();
     float angle = rr.angle;
     Size rect_size = rr.size;
-    cout << "ID: " << getID() << " ANGLE: " << angle << endl;
-    if (angle > 90.) 
-    {   
-        angle -= 90.0;
-        cout << "ANGLE + 90: " << angle << endl;
-        // if (rect_size.width > rect_size.height)
-        // {
-        //     rect_size.height = rect_size.width;
-        // }
-        // else
-        // {
-        //     rect_size.width = rect_size.height;
-        // }
-        swap(rect_size.width, rect_size.height);
-    }
-    Mat rotMatrix = getRotationMatrix2D(rr.center, angle, 1.0);
+    Mat rot = getRotationMatrix2D(rr.center, angle, 1.0);
+    Rect2f bbox = RotatedRect(Point2f(), image.size(), angle).boundingRect2f();
+    //rot.at<double>(0,2) += bbox.width/2.0 - image.cols/2.0;
+    //rot.at<double>(1,2) += bbox.height/2.0 - image.rows/2.0;
     Mat imageAffine, cropped, rotated;
-    warpAffine(image, imageAffine, rotMatrix, image.size(), INTER_CUBIC);
-    //rect_size.height = (rect_size.width > rect_size.height)? rect_size.width:rect_size.height;
+    warpAffine(image, imageAffine, rot, bbox.size(), INTER_CUBIC);
     getRectSubPix(imageAffine, rect_size, rr.center, cropped);
-    //rotated = opnmsp::Utility::rotate(cropped, 90);
+   
+    //int randoms = rand()*1000;
+    //stringstream ss, pp, qq; 
+    //ss << "IMAGE___"   << randoms;
+    //namedWindow(ss.str(),WINDOW_NORMAL); imshow(ss.str(), image);
+    //pp << "AFFINE___"  << randoms;
+    //rectangle(imageAffine, Rect(rect_size), Scalar(125,17,186));
+    //namedWindow(pp.str(),WINDOW_NORMAL); imshow(pp.str(), imageAffine);
+    //qq << "CROPPED___" << randoms;   
+    //namedWindow(qq.str(),WINDOW_NORMAL); imshow(qq.str(), rotated2);
     
-    int randoms = rand()*1000;
-    stringstream ss, pp, qq; 
-    ss << "RANDOM___"   << randoms;
-    pp << "RANDOM+1___" << randoms; 
-    qq << "RANDOM+2___" << randoms;
-    namedWindow(ss.str(),WINDOW_NORMAL); imshow(ss.str(), imageAffine);
-    namedWindow(pp.str(),WINDOW_NORMAL); imshow(pp.str(), cropped);
-    namedWindow(qq.str(),WINDOW_NORMAL); imshow(qq.str(), image);
     // Pronalazi boje
     vector<opnmsp::Color*> RColors = 
     { 
@@ -101,9 +89,9 @@ void objectsnmsp::Resistor::recognize()
     };
     opnmsp::Color *RBColor = new opnmsp::RBackground;
     int i = 0;
-    while ( ++i < cropped.cols )
+    while ( ++i < cropped.rows )
     {
-        Rect roi(i, 0, 1, cropped.rows);
+        Rect roi(0, i, cropped.cols, 1);
         Mat section(cropped(roi));
         vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
         if ( pColors.size() == 1)
@@ -120,6 +108,7 @@ void objectsnmsp::Resistor::recognize()
             detectedColors.push_back(RBColor);
         }
     }
+    int iiid = getID();
     detectedColors.unique();
     // prepisivanje u ringcolors
     list<opnmsp::Color*>::iterator it = detectedColors.begin(); 

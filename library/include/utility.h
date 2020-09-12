@@ -42,8 +42,8 @@ namespace opnmsp
 
     struct RBackground: Color
     {
-        Scalar *up = new Scalar(20, 122, 242);
-        Scalar *down = new Scalar(14, 30, 145);
+        Scalar *up = new Scalar(23, 250, 250);
+        Scalar *down = new Scalar(16, 10, 10);
         
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -110,8 +110,8 @@ namespace opnmsp
 
     struct RGold: Color
     {
-        Scalar *up = new Scalar(16,155,182);
-        Scalar *down = new Scalar(13,117,87);
+        Scalar *up = new Scalar(15,255,255);
+        Scalar *down = new Scalar(15,0,0);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -268,7 +268,6 @@ namespace opnmsp
         static bool isColorPresent(Color*, Mat);
         static vector<Color*> presentColors(vector<Color*>, Mat);
         static RotatedRect findRotRect(Mat);
-        static Mat rotate(Mat, double);
     };
 }
 
