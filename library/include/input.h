@@ -149,10 +149,11 @@ namespace panmsp
     {
         private:
         string imagepath, backgroundpath;
+        int x, y, width, height;
         void start() override;
 
         public:
-        SingleImage(string ipath, string bpath): imagepath(ipath), backgroundpath(bpath) {}
+        SingleImage(string ipath, string bpath, int x, int y, int width, int height): imagepath(ipath), backgroundpath(bpath), x(x), y(y), width(width), height(height) {}
         SingleImage(const SingleImage&) = delete;
         ~SingleImage(){}
     };
@@ -161,10 +162,11 @@ namespace panmsp
     {
         private:
         string folderpath, backgroundpath;
+        int x, y, width, height;
         void start() override;
 
         public:
-        MultipleImages(string fpath, string bpath): folderpath(fpath), backgroundpath(bpath) {}
+        MultipleImages(string fpath, string bpath, int x, int y, int width, int height): folderpath(fpath), backgroundpath(bpath), x(x), y(y), width(width), height(height) {}
         MultipleImages(const MultipleImages&) = delete;
         ~MultipleImages() {}
     };

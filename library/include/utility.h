@@ -42,8 +42,8 @@ namespace opnmsp
 
     struct RBackground: Color
     {
-        Scalar *up = new Scalar(16, 185, 128);
-        Scalar *down = new Scalar(15, 150, 128);
+        Scalar *up = new Scalar(23, 250, 250);
+        Scalar *down = new Scalar(16, 10, 10);
         
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -59,8 +59,8 @@ namespace opnmsp
 
     struct ROrange: Color
     {
-        Scalar *up = new Scalar(14,242,148);
-        Scalar *down = new Scalar(12,217,124);
+        Scalar *up = new Scalar(13,186,205);
+        Scalar *down = new Scalar(11,141,164);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -76,8 +76,8 @@ namespace opnmsp
 
     struct RRed: Color
     {
-        Scalar *up = new Scalar(4,255,97);
-        Scalar *down = new Scalar(3,223,71);
+        Scalar *up = new Scalar(7,198,137);
+        Scalar *down = new Scalar(0,162,118);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -93,8 +93,8 @@ namespace opnmsp
 
     struct RBrown: Color
     {
-        Scalar *up = new Scalar(6,255,46);
-        Scalar *down = new Scalar(3,247,30);
+        Scalar *up = new Scalar(12,155,91);
+        Scalar *down = new Scalar(8,114,84);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -110,8 +110,8 @@ namespace opnmsp
 
     struct RGold: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(15,255,255);
+        Scalar *down = new Scalar(15,0,0);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -127,8 +127,8 @@ namespace opnmsp
 
     struct RBlack: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(11,255,56);
+        Scalar *down = new Scalar(5,200,31);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -161,8 +161,8 @@ namespace opnmsp
 
     struct RGreen: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(33,98,157);
+        Scalar *down = new Scalar(29,45,96);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -178,8 +178,8 @@ namespace opnmsp
 
     struct RBlue: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(122,206,124);
+        Scalar *down = new Scalar(112,44,64);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -195,8 +195,8 @@ namespace opnmsp
 
     struct RViolet: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(139,91,150);
+        Scalar *down = new Scalar(134,49,92);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }
@@ -212,8 +212,8 @@ namespace opnmsp
 
     struct RGrey: Color
     {
-        Scalar *up = new Scalar(15,250,80);
-        Scalar *down = new Scalar(13,206,53);
+        Scalar *up = new Scalar(114,14,125);
+        Scalar *down = new Scalar(110,10,80);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }

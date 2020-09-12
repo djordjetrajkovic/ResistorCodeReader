@@ -11,16 +11,16 @@ rtnmsp::Begin* rtnmsp::Begin::createBegin()
     return singleinstance;
 }
 
-void rtnmsp::Begin::findObjectsFile(string imagepath, string backgroundpath)
+void rtnmsp::Begin::findObjectsFile(string imagepath, string backgroundpath, int x, int y, int width, int height)
 {
-    panmsp::ACommand *starter = new panmsp::SingleImage(imagepath, backgroundpath);
+    panmsp::ACommand *starter = new panmsp::SingleImage(imagepath, backgroundpath, x, y, width, height);
     starter -> execute();
     delete starter;
 }
 
-void rtnmsp::Begin::findObjectsFolder(string folderpath, string backgroundpath)
+void rtnmsp::Begin::findObjectsFolder(string folderpath, string backgroundpath, int x, int y, int width, int height)
 {
-    panmsp::ACommand *starter = new panmsp::MultipleImages(folderpath, backgroundpath);
+    panmsp::ACommand *starter = new panmsp::MultipleImages(folderpath, backgroundpath, x, y, width, height);
     starter->execute();
     delete starter;
 }
