@@ -17,8 +17,10 @@ void opnmsp::FindByTemplate::findObjects()
         for(auto contour: *contours)
         {
             auto rect = boundingRect(contour);
-            rect.x += (int)(sample->getImagePatternGrayscale().cols/2 - 1);
-            rect.y += (int)(sample->getImagePatternGrayscale().rows/2 - 1);
+            rect.x += (int)(sample->getImagePatternGrayscale().cols/2);
+            rect.y += (int)(sample->getImagePatternGrayscale().rows/2);
+            rect.width *= 1.2;
+            rect.height *= 1.2;
             //Mat image_grayscale;
             //cvtColor(image, image_grayscale, COLOR_BGR2GRAY);
             Mat image_of_interest = img_isolated(rect);
@@ -43,7 +45,7 @@ Mat opnmsp::FindByTemplate::segment()
     medianBlur(bckg_grayscale, bck_median, 7);
     if (show) { namedWindow("Median"); imshow("Median", img_median); }
 
-    // Background substruction
+    // Background subst
     Mat img_comp;
     img_comp = bck_median - img_median;
     if (show) { namedWindow("Compensated"); imshow("Compensated", img_comp);}
@@ -78,7 +80,7 @@ Mat opnmsp::FindByTemplate::segment()
     for (auto i = 1; i < num_objects; i++)
     {
         // ispisivanje lokacije centra mase objekta i povrsine
-        cout << "Object " << i << " onto position: (" << centroids.at<short>(i,0) << ", " << centroids.at<short>(i,1) << "), with area: " << stats.at<int>(i, CC_STAT_AREA) << "." << endl;
+        //cout << "Object " << i << " onto position: (" << centroids.at<short>(i,0) << ", " << centroids.at<short>(i,1) << "), with area: " << stats.at<int>(i, CC_STAT_AREA) << "." << endl;
         Mat mask = labels == i;
         Scalar color = Scalar(255);
         img_isolated.setTo(color, mask);
@@ -93,17 +95,19 @@ vector<vector<Point>>* opnmsp::FindByTemplate::searchByTemplate(Mat img_isolated
 
     Mat ftmp[6];
     //if (show) { namedWindow("PATTERN"); imshow("PATTERN", sample->getImagePatternBinary()); }
-    for (int i=0; i<6; ++i)
-    {
-        matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[i], i);
-        normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
-    }
-    if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
-    if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
-    if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
-    if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
+    // for (int i=0; i<6; ++i)
+    // {
+    //     matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[i], i);
+    //     normalize(ftmp[i], ftmp[i], 1, 0, NORM_MINMAX);
+    // }
+    matchTemplate(img_isolated, sample->getImagePatternBinary(), ftmp[4], 4);
+    normalize(ftmp[4], ftmp[4], 1, 0, NORM_MINMAX);
+    //if (show) { namedWindow("SQDIFF"); imshow( "SQDIFF", ftmp[0] ); }
+    //if (show) { namedWindow("SQDIFF_NORMED"); imshow( "SQDIFF_NORMED", ftmp[1] ); }
+    //if (show) { namedWindow("CCORR"); imshow( "CCORR", ftmp[2] ); }
+    //if (show) { namedWindow("CCORR_NORMED"); imshow( "CCORR_NORMED", ftmp[3] ); }
     if (show) { namedWindow("CCOEFF"); imshow( "CCOEFF", ftmp[4] ); }
-    if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
+    //if (show) { namedWindow("CCOEFF_NORMED"); imshow( "CCOEFF_NORMED", ftmp[5] ); }
     
     Mat img_thrld;
     threshold(ftmp[4], img_thrld, 0.5, 1, THRESH_BINARY);
@@ -146,8 +150,8 @@ void opnmsp::FindByTemplate::searchByContour(Mat& image_contour, Mat temple, obj
         if (!contour.empty() && contour.size()>60) 
         {
             dis = mysc -> computeDistance(c2, cc);
-            cout << "Kontura, Shape context distance: " << dis << endl;
-            if (dis < 2700  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
+            //cout << "Kontura, Shape context distance: " << dis << endl;
+            if (dis < 1700  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect)) ) //  && opnmsp::Utility::isColorPresent(new RBackground(), image(rect))
             {
                 RotatedRect rr = fitEllipse(cc);
                 objectsnmsp::AObject *newobject = sample -> clone(); // Proveri dal treba izvan petlje
