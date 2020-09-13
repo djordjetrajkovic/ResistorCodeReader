@@ -93,8 +93,8 @@ namespace opnmsp
 
     struct RBrown: Color
     {
-        Scalar *up = new Scalar(13,255,226);
-        Scalar *down = new Scalar(7,64,71);
+        Scalar *up = new Scalar(8,230,110);
+        Scalar *down = new Scalar(10,210,71);
 
         Scalar getUpColor() override { return *up; }
         Scalar getDownColor() override {return *down; }

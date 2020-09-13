@@ -6,9 +6,10 @@ using namespace std;
 int main()
 {
     rtnmsp::Begin* begin = rtnmsp::Begin::createBegin();
-    begin->findObjectsFile("samples/images/slika1_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg", 300, 200, 900, 1200);
-    //begin->findObjectsFile("samples/images/slika2_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg");
-    //begin->findObjectsFile("samples/images/slika3_novo.jpg", "samples/backgrounds/pozadina1_novo.jpg");
+    begin->findObjectsFile("samples/images/resistors1.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("samples/images/resistors2.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("samples/images/resistors3.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("samples/images/resistors4.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
     cout << "Waiting for 'q'... " << endl;
     char key;
     while (true)

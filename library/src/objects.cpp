@@ -72,7 +72,7 @@ void objectsnmsp::Resistor::recognize()
     //rectangle(imageAffine, Rect(rect_size), Scalar(125,17,186));
     //namedWindow(pp.str(),WINDOW_NORMAL); imshow(pp.str(), imageAffine);
     //qq << "CROPPED___" << randoms;   
-    //namedWindow(qq.str(),WINDOW_NORMAL); imshow(qq.str(), rotated2);
+    //namedWindow(qq.str(),WINDOW_NORMAL); imshow(qq.str(), cropped);
     
     // Pronalazi boje
     vector<opnmsp::Color*> RColors = 
@@ -98,12 +98,12 @@ void objectsnmsp::Resistor::recognize()
         vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
         bool pozadina = opnmsp::Utility::isColorPresent(RBColor, section);
         int prisutneboje = pColors.size();
-        if ( prisutneboje == 1 )  // && !pozadina
+        if ( prisutneboje == 1 && !pozadina)  // 
         {
             detectedColors.push_back(pColors.at(0));
             continue;
         }
-        if ( pColors.size() > 1)
+        if ( prisutneboje > 1)
         {
             continue;
         }
