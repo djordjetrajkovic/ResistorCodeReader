@@ -85,7 +85,9 @@ void objectsnmsp::Resistor::recognize()
         new opnmsp::RGrey,
         new opnmsp::RBlack,
         new opnmsp::RViolet,
-        new opnmsp::RGreen
+        new opnmsp::RGreen,
+        new opnmsp::RYellow,
+        new opnmsp::RGrey
     };
     opnmsp::Color *RBColor = new opnmsp::RBackground;
     int i = 0;
@@ -94,7 +96,9 @@ void objectsnmsp::Resistor::recognize()
         Rect roi(0, i, cropped.cols, 1);
         Mat section(cropped(roi));
         vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
-        if ( pColors.size() == 1)
+        bool pozadina = opnmsp::Utility::isColorPresent(RBColor, section);
+        int prisutneboje = pColors.size();
+        if ( prisutneboje == 1 )  // && !pozadina
         {
             detectedColors.push_back(pColors.at(0));
             continue;
@@ -103,7 +107,7 @@ void objectsnmsp::Resistor::recognize()
         {
             continue;
         }
-        if( opnmsp::Utility::isColorPresent(RBColor, section))
+        if( pozadina && prisutneboje==0)
         {
             detectedColors.push_back(RBColor);
         }
