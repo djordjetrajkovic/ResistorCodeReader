@@ -121,7 +121,7 @@ void panmsp::SingleImage::start()
     composite -> add(loadsamples);
     composite -> add(findobjects);
     composite -> add(displayresults);
-    composite -> add(displayobjects);
+    //composite -> add(displayobjects);
     composite -> add(displayimage);
 
     // start from here
@@ -217,10 +217,10 @@ void panmsp::DisplayImage::show()
         for (int i = 0; i<4; i++) { vertices[i].x += rec.x; vertices[i].y += rec.y;}
         for (int i = 0; i < 4; i++) line(singleobject, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
         id << object->getID();
-        putText(singleobject, id.str(), vertices[0], FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,0,0));
+        putText(singleobject, id.str(), vertices[0], FONT_HERSHEY_SIMPLEX,0.7, Scalar(255,0,255));
     }
     int recognizedobjs = objects.size();
-    stringstream ss; ss << "Recognized_objects No." << recognizedobjs;
+    stringstream ss; ss << "Op. ID=" << operation->getID() << ", Recognized_objects No=" << recognizedobjs  ;
     string headline = ss.str(); 
     namedWindow(headline, WINDOW_NORMAL); imshow(headline, singleobject);
 }
