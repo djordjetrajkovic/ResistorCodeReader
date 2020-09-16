@@ -122,7 +122,7 @@ void panmsp::SingleImage::start()
     composite -> add(findobjects);
     composite -> add(displayresults);
     //composite -> add(displayobjects);
-    composite -> add(displayimage);
+    //composite -> add(displayimage);
 
     // start from here
     composite -> execute();
