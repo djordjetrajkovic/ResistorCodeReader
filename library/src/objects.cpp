@@ -56,45 +56,64 @@ void objectsnmsp::Resistor::recognize()
     RotatedRect rr = getRotRect();
     float angle = rr.angle;
     Size rect_size = rr.size;
-    if (rr.angle > -45.) 
-    {
-        angle += 90.0;
-        swap(rect_size.width, rect_size.height);
-    }
-    Mat rotMatrix = getRotationMatrix2D(rr.center, angle, 1.0);
-    Mat imageAffine, cropped;
-    warpAffine(image, imageAffine, rotMatrix, image.size(), INTER_CUBIC);
+    Mat rot = getRotationMatrix2D(rr.center, angle, 1.0);
+    Rect2f bbox = RotatedRect(Point2f(), image.size(), angle).boundingRect2f();
+    //rot.at<double>(0,2) += bbox.width/2.0 - image.cols/2.0;
+    //rot.at<double>(1,2) += bbox.height/2.0 - image.rows/2.0;
+    Mat imageAffine, cropped, rotated;
+    warpAffine(image, imageAffine, rot, bbox.size(), INTER_CUBIC);
     getRectSubPix(imageAffine, rect_size, rr.center, cropped);
-
+   
+    //int randoms = rand()*1000;
+    //stringstream ss, pp, qq; 
+    //ss << "IMAGE___"   << randoms;
+    //namedWindow(ss.str(),WINDOW_NORMAL); imshow(ss.str(), image);
+    //pp << "AFFINE___"  << randoms;
+    //rectangle(imageAffine, Rect(rect_size), Scalar(125,17,186));
+    //namedWindow(pp.str(),WINDOW_NORMAL); imshow(pp.str(), imageAffine);
+    //qq << "CROPPED___" << randoms;   
+    //namedWindow(qq.str(),WINDOW_NORMAL); imshow(qq.str(), cropped);
+    
     // Pronalazi boje
     vector<opnmsp::Color*> RColors = 
     { 
         new opnmsp::ROrange,
         new opnmsp::RRed,
         new opnmsp::RBrown,
-        new opnmsp::RGold
+        new opnmsp::RGold,
+        new opnmsp::RBlue,
+        new opnmsp::RGrey,
+        new opnmsp::RBlack,
+        new opnmsp::RViolet,
+        new opnmsp::RGreen,
+        new opnmsp::RYellow,
+        new opnmsp::RGrey,
+        new opnmsp::RWhite
     };
     opnmsp::Color *RBColor = new opnmsp::RBackground;
     int i = 0;
-    while ( ++i < cropped.cols )
+    while ( ++i < cropped.rows )
     {
-        Rect roi(i, 0, 1, cropped.rows);
+        Rect roi(0, i, cropped.cols, 1);
         Mat section(cropped(roi));
         vector<opnmsp::Color*> pColors = opnmsp::Utility::presentColors(RColors, section);
-        if ( pColors.size() == 1)
+        bool pozadina = opnmsp::Utility::isColorPresent(RBColor, section);
+        int prisutneboje = pColors.size();
+        if ( prisutneboje == 1 )  // && !pozadina
         {
             detectedColors.push_back(pColors.at(0));
             continue;
         }
-        if ( pColors.size() > 1)
+        if ( prisutneboje > 1)
         {
             continue;
         }
-        if( opnmsp::Utility::isColorPresent(RBColor, section))
+        if( pozadina && prisutneboje==0)
         {
             detectedColors.push_back(RBColor);
         }
     }
+    int iiid = getID();
     detectedColors.unique();
     // prepisivanje u ringcolors
     list<opnmsp::Color*>::iterator it = detectedColors.begin(); 
@@ -106,7 +125,7 @@ void objectsnmsp::Resistor::recognize()
     }
     // izvrni ako je tolerancija prva
     opnmsp::Color *RGold = new opnmsp::RGold;
-    if ( *ringcolors.at(0) == *RGold )
+    if ( !ringcolors.empty() && *ringcolors.at(0) == *RGold )
     {
         deque<opnmsp::Color*> ringcolors_copy(ringcolors);
         deque<opnmsp::Color*>::reverse_iterator rit = ringcolors_copy.rbegin(); 

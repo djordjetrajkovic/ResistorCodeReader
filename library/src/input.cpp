@@ -17,7 +17,8 @@ panmsp::ALoadImage::~ALoadImage(){}
 
 void panmsp::File::openImageFile()
 {
-    Mat image(imread(imagepath), roi);
+   
+    Mat image(imread(imagepath), roi); 
     operation->setImage(image);
 }
 
@@ -105,7 +106,7 @@ void panmsp::SingleImage::start()
     string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
     string resistorbinarypattern = "samples/templates/binary/template.jpg";
 
-    Rect r (300, 300, 900, 1200);
+    Rect r (x, y, width, height);
 
     opnmsp::AFind    *operation = new opnmsp::FindByTemplate();
     panmsp::ACommand *fromfile = new panmsp::File(operation, r, imagepath, backgroundpath);
@@ -120,8 +121,8 @@ void panmsp::SingleImage::start()
     composite -> add(loadsamples);
     composite -> add(findobjects);
     composite -> add(displayresults);
-    composite -> add(displayobjects);
-    composite -> add(displayimage);
+    //composite -> add(displayobjects);
+    //composite -> add(displayimage);
 
     // start from here
     composite -> execute();
@@ -134,7 +135,7 @@ void panmsp::MultipleImages::start()
     string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
     string resistorbinarypattern = "samples/templates/binary/template.jpg";
 
-    Rect r (300, 300, 900, 1200);
+    Rect r (x, y, width, height);
 
     VideoCapture images;
     if (images.open(folderpath) == false)
@@ -202,21 +203,26 @@ void panmsp::DisplayImage::execute()
 void panmsp::DisplayImage::show()
 {
     auto objects = operation->getObjects();
-    Mat img = (operation->getImage()).clone();
+    Mat singleobject = (operation->getImage()).clone();
     for (auto object: objects) 
     {   
         stringstream text, id;
+        // Crveni pravougaonik
         Rect rec = object->getRoi();
-        rectangle(img, rec, Scalar(0,0,255), 1);
-        text << *object;
-        putText(img, text.str(), Point2d(rec.x, rec.y), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,255));
-        id << object -> getID();
-        putText(img, id.str(), Point2d(rec.x + rec.width, rec.y + rec.height), FONT_HERSHEY_SIMPLEX,0.4, Scalar(0,255,0));
+        rectangle(singleobject, rec, Scalar(0,0,255), 1);
+
+        // Crni prav.
+        Point2f vertices[4];
+        object->getRotRect().points(vertices);
+        for (int i = 0; i<4; i++) { vertices[i].x += rec.x; vertices[i].y += rec.y;}
+        for (int i = 0; i < 4; i++) line(singleobject, vertices[i], vertices[(i+1)%4], Scalar(0,0,0), 1);
+        id << object->getID();
+        putText(singleobject, id.str(), vertices[0], FONT_HERSHEY_SIMPLEX,0.7, Scalar(255,0,255));
     }
-    int id = operation->getID();
-    stringstream ss; ss << "Recognized_objects No." << id;
+    int recognizedobjs = objects.size();
+    stringstream ss; ss << "Op. ID=" << operation->getID() << ", Recognized_objects No=" << recognizedobjs  ;
     string headline = ss.str(); 
-    namedWindow(headline, WINDOW_NORMAL); imshow(headline, img);
+    namedWindow(headline, WINDOW_NORMAL); imshow(headline, singleobject);
 }
 
 //////////////////////////////////////////////////////

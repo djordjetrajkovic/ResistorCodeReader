@@ -15,8 +15,8 @@ namespace rtnmsp
 
         public:
         static Begin* createBegin();
-        void findObjectsFile(string, string);
-        void findObjectsFolder(string, string);
+        void findObjectsFile(string, string, int, int, int, int);
+        void findObjectsFolder(string, string, int, int, int, int);
         void findObjectsCamera(string, string, int);
     };
 }
