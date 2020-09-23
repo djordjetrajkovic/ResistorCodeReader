@@ -28,7 +28,7 @@ RUN echo "${user}:${user}" > shadow.txt; \
     libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev; \
     git clone -q https://github.com/opencv/opencv.git /home/${user}/opencv_build/opencv; \
     git clone -q https://github.com/opencv/opencv_contrib.git /home/${user}/opencv_build/opencv_contrib; \
-    apt install -y libboost-all-dev
+    apt install -y libboost-all-dev \
     apt install -y gdb
 WORKDIR "/home/${user}/opencv_build/opencv/build"
 RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
