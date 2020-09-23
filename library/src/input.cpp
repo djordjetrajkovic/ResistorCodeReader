@@ -103,8 +103,8 @@ void panmsp::DisplayResult::execute()
 
 void panmsp::SingleImage::start()
 {
-    string resistorgrayscalepattern = "samples/templates/grayscale/template_grayscale.jpg";
-    string resistorbinarypattern = "samples/templates/binary/template.jpg";
+    string resistorgrayscalepattern = "/home/djordje/Project/ResistorColorCode/samples/templates/grayscale/template_grayscale.jpg";
+    string resistorbinarypattern = "/home/djordje/Project/ResistorColorCode/samples/templates/binary/template.jpg";
 
     Rect r (x, y, width, height);
 

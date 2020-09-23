@@ -6,10 +6,10 @@ using namespace std;
 int main()
 {
     rtnmsp::Begin* begin = rtnmsp::Begin::createBegin();
-    begin->findObjectsFile("samples/images/resistors1.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
-    begin->findObjectsFile("samples/images/resistors2.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
-    begin->findObjectsFile("samples/images/resistors3.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
-    begin->findObjectsFile("samples/images/resistors4.jpg", "samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("/home/djordje/Project/ResistorColorCode/samples/images/resistors1.jpg", "/home/djordje/Project/ResistorColorCode/samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("/home/djordje/Project/ResistorColorCode/samples/images/resistors2.jpg", "/home/djordje/Project/ResistorColorCode/samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("/home/djordje/Project/ResistorColorCode/samples/images/resistors3.jpg", "/home/djordje/Project/ResistorColorCode/samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
+    begin->findObjectsFile("/home/djordje/Project/ResistorColorCode/samples/images/resistors4.jpg", "/home/djordje/Project/ResistorColorCode/samples/backgrounds/bckg_flash.jpg", 300, 200, 900, 1200);
     cout << "Waiting for 'q'... " << endl;
     char key;
     while (true)
